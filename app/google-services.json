@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "532547478822",
+    "project_id": "mits-complaint-management",
+    "storage_bucket": "mits-complaint-management.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532547478822:android:ddf8338018f8e54a378de7",
+        "android_client_info": {
+          "package_name": "com.mgits.complaintreg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532547478822-6rai60a0n9vmii4jkpopa7434vh02vju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_wkmyAo4iDYAoFRTmDlNQQZVqPWkYJRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532547478822-6rai60a0n9vmii4jkpopa7434vh02vju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
