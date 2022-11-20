@@ -1,9 +1,6 @@
 package com.mgits.complaintreg.ui.auth
 
 
-import android.annotation.SuppressLint
-import android.util.Patterns
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,38 +24,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.google.firebase.auth.FirebaseAuth
 import com.mgits.complaintreg.R
-import com.mgits.complaintreg.navigation.ROUTE_USER_HOME
 
 
-@SuppressLint("UnrememberedMutableState")
+
 @Composable
 fun LoginScreen(
-    auth: FirebaseAuth,
-    navController: NavController,
+    loginViewModel: LoginViewModel? = null,
+    onNavToHomePage:() -> Unit,
+    onNavToSignUpPage:() -> Unit,
 ) {
 
+    val loginUiState = loginViewModel?.loginUiState
+    val isError = loginUiState?.loginError != null
     val context = LocalContext.current
-
-    var email by remember {
-        mutableStateOf("")
-    }
-
-    var password by remember {
-        mutableStateOf("")
-    }
-
-    val isDomainValid by derivedStateOf {
-        val domain = email.split('@').last()
-        domain == "mgits.ac.in"
-    }
-
-    val isEmailValid by derivedStateOf {
-        Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
 
 
     Column(
@@ -111,8 +90,8 @@ fun LoginScreen(
                 modifier = Modifier.padding(all = 10.dp)
             ) {
                 TextField(
-                    value = email,
-                    onValueChange = {email = it},
+                    value = loginUiState?.userName ?: "",
+                    onValueChange = {loginViewModel?.onUserNameChange(it)},
                     modifier = Modifier
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -121,27 +100,26 @@ fun LoginScreen(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
                     ),
-                    isError = !isDomainValid,
                     placeholder = { Text(text = "Email")}
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ){
-                    if (!isDomainValid && isEmailValid) {
-                        Text(
-                            text = "Require @mgits.ac.in",
-                            color = MaterialTheme.colors.error,
-                            style = MaterialTheme.typography.caption,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }
-                }
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                ){
+//                    if (!isDomainValid && isEmailValid) {
+//                        Text(
+//                            text = "Require @mgits.ac.in",
+//                            color = MaterialTheme.colors.error,
+//                            style = MaterialTheme.typography.caption,
+//                            modifier = Modifier.padding(start = 16.dp)
+//                        )
+//                    }
+//                }
 
 
                 TextField(
-                    value = password,
-                    onValueChange = {password = it},
+                    value = loginUiState?.password ?: "",
+                    onValueChange = { loginViewModel?.onPasswordNameChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -164,19 +142,12 @@ fun LoginScreen(
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier
-                            .clickable {  }
+                            .clickable { loginViewModel?.resetPassword(context) }
                     )
                 }
                 Button(
                     onClick = {
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener {
-                                if(it.isSuccessful)
-                                    navController.navigate(ROUTE_USER_HOME)
-                                else{
-                                    Toast.makeText(context, "Idk why", Toast.LENGTH_SHORT).show()
-                                }
-                            }
+                        loginViewModel?.loginUser(context)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -198,7 +169,7 @@ fun LoginScreen(
             }
 
         }
-        Row() {
+        Row{
             Text(
                 text = "Don't have an account? ",
                 modifier = Modifier
@@ -213,6 +184,15 @@ fun LoginScreen(
             )
         }
 
+        if (loginUiState?.isLoading == true){
+            CircularProgressIndicator()
+        }
+
+        LaunchedEffect(key1 = loginViewModel?.hasUser){
+            if (loginViewModel?.hasUser == true){
+                onNavToHomePage.invoke()
+            }
+        }
 
     }
 
