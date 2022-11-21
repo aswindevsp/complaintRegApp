@@ -134,7 +134,7 @@ fun Register(
                 )
                 OutlinedTextField(
                     value = loginUiState?.emailSignUp?:"",
-                    onValueChange = { loginViewModel?.onNameChangeSignup(it) },
+                    onValueChange = { loginViewModel?.onEmailChangeSignup(it) },
                     leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
                     label = {
                         Text(
