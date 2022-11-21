@@ -1,8 +1,10 @@
 package com.mgits.complaintreg.repository
 
 
+
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -11,7 +13,12 @@ import kotlinx.coroutines.withContext
 class AuthRepository {
     val currentUser:FirebaseUser? = Firebase.auth.currentUser
 
+    var issAdmin:Boolean = false
+
     fun hasUser():Boolean = Firebase.auth.currentUser != null
+
+
+
 
     fun getUserId():String = Firebase.auth.currentUser?.uid.orEmpty()
 
@@ -59,6 +66,24 @@ class AuthRepository {
                     onComplete.invoke(false)
                 }
             }.await()
+    }
+
+     suspend fun isAdmin(
+        onComplete: (Boolean) -> Unit
+    ) {
+        val db = Firebase.firestore
+        db.collection("users").document(getUserId()).get()
+            .addOnSuccessListener { document ->
+                if (document.getBoolean("admin") == true) {
+                    issAdmin = true
+                   onComplete.invoke(true)
+                }else {
+                    issAdmin = false
+                    onComplete.invoke(false)
+                }
+            }.await()
+
+
     }
 
 

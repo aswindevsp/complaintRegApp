@@ -1,9 +1,7 @@
 package com.mgits.complaintreg.ui.auth
 
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +22,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.R
 
 
@@ -32,6 +34,7 @@ import com.mgits.complaintreg.R
 fun LoginScreen(
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage:() -> Unit,
+    onNavToAdminPage:() -> Unit,
     onNavToSignUpPage:() -> Unit,
 ) {
 
@@ -42,6 +45,7 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colors.background)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -56,12 +60,12 @@ fun LoginScreen(
                 )
         ) {
             Image(
-                painter = painterResource(id = R.drawable.mitslogo),
+                painter = painterResource(id = R.drawable.mil),
                 contentDescription = "mits logo",
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
-                contentScale = ContentScale.Crop
+                //contentScale = ContentScale.Crop
             )
         }
         Text(
@@ -82,16 +86,17 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 16.dp),
             shape = RoundedCornerShape(16.dp),
-            border = BorderStroke(1.dp, Color.White)
+            elevation = 0.dp,
+            backgroundColor = MaterialTheme.colors.background
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(all = 10.dp)
             ) {
-                TextField(
-                    value = loginUiState?.userName ?: "",
-                    onValueChange = {loginViewModel?.onUserNameChange(it)},
+                OutlinedTextField(
+                    value = loginUiState?.email ?: "",
+                    onValueChange = {loginViewModel?.onEmailChange(it)},
                     modifier = Modifier
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -100,26 +105,29 @@ fun LoginScreen(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
                     ),
-                    placeholder = { Text(text = "Email")}
+                    placeholder = { Text(text = "abc@mgits.ac.in")},
+                    label = { Text(text = "Email")},
                 )
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                ){
-//                    if (!isDomainValid && isEmailValid) {
-//                        Text(
-//                            text = "Require @mgits.ac.in",
-//                            color = MaterialTheme.colors.error,
-//                            style = MaterialTheme.typography.caption,
-//                            modifier = Modifier.padding(start = 16.dp)
-//                        )
-//                    }
-//                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    if (loginViewModel != null) {
+                        if (loginViewModel.validateEmail()) {
+                            Text(
+                                text = "Require @mgits.ac.in",
+                                color = MaterialTheme.colors.error,
+                                style = MaterialTheme.typography.caption,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                        }
+                    }
+                }
 
 
-                TextField(
+                OutlinedTextField(
                     value = loginUiState?.password ?: "",
-                    onValueChange = { loginViewModel?.onPasswordNameChange(it) },
+                    onValueChange = { loginViewModel?.onPasswordChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(
@@ -129,7 +137,9 @@ fun LoginScreen(
                         imeAction = ImeAction.Done
                     ),
                     visualTransformation = PasswordVisualTransformation(),
-                    placeholder = { Text(text = "******")}
+                    placeholder = { Text(text = "******")},
+                    label = {Text(text = "Password")}
+
                 )
 
                 Row (
@@ -171,15 +181,13 @@ fun LoginScreen(
         }
         Row{
             Text(
-                text = "Don't have an account? ",
-                modifier = Modifier
-                    .clickable {  }
+                text = "Don't have an account? "
             )
 
             Text(
                 text = "Sign up",
                 modifier = Modifier
-                    .clickable {  },
+                    .clickable { onNavToSignUpPage.invoke() },
                 color = MaterialTheme.colors.primary
             )
         }
@@ -190,7 +198,20 @@ fun LoginScreen(
 
         LaunchedEffect(key1 = loginViewModel?.hasUser){
             if (loginViewModel?.hasUser == true){
-                onNavToHomePage.invoke()
+                val test = Firebase.auth.currentUser?.uid
+                val db = Firebase.firestore
+
+                if (test != null) {
+                    db.collection("users").document(test)
+                        .get()
+                        .addOnSuccessListener { idk->
+                            if(idk.getBoolean("admin") == true)
+                                onNavToAdminPage.invoke()
+                            else
+                                onNavToHomePage.invoke()
+                        }
+                }
+
             }
         }
 

@@ -1,12 +1,18 @@
 package com.mgits.complaintreg.ui.auth
 
 import android.content.Context
+import android.service.controls.ControlsProviderService
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import kotlinx.coroutines.launch
 import kotlin.math.log
@@ -19,19 +25,27 @@ class LoginViewModel(
     val hasUser: Boolean
         get() = repository.hasUser()
 
+
     var loginUiState by mutableStateOf(LoginUiState())
         private set
 
-    fun onUserNameChange(userName: String) {
-        loginUiState = loginUiState.copy(userName = userName)
+
+    //For login
+    fun onEmailChange(email: String) {
+        loginUiState = loginUiState.copy(email = email)
     }
 
-    fun onPasswordNameChange(password: String) {
+    fun onPasswordChange(password: String) {
         loginUiState = loginUiState.copy(password = password)
     }
 
-    fun onUserNameChangeSignup(userName: String) {
-        loginUiState = loginUiState.copy(userNameSignUp = userName)
+
+    //For register
+    fun onNameChangeSignup(nameSignUp: String) {
+        loginUiState = loginUiState.copy(nameSignUp = nameSignUp)
+    }
+    fun onEmailChangeSignup(emailSignUp: String) {
+        loginUiState = loginUiState.copy(emailSignUp = emailSignUp)
     }
 
     fun onPasswordChangeSignup(password: String) {
@@ -42,14 +56,23 @@ class LoginViewModel(
         loginUiState = loginUiState.copy(confirmPasswordSignUp = password)
     }
 
+    fun onDepartmentChangeSignup(departmentSignUp: String) {
+        loginUiState = loginUiState.copy(departmentSignUp = departmentSignUp)
+    }
+
+
+    fun validateEmail(): Boolean {
+        val domain = loginUiState.email.split("@")
+        return (domain.last() != "mgits.ac.in" && domain.size > 1)
+    }
+
     private fun validateLoginForm() =
-        loginUiState.userName.isNotBlank() &&
+        loginUiState.email.isNotBlank() &&
                 loginUiState.password.isNotBlank()
 
     private fun validateSignupForm() =
-        loginUiState.userNameSignUp.isNotBlank() &&
-                loginUiState.passwordSignUp.isNotBlank() &&
-                loginUiState.confirmPasswordSignUp.isNotBlank()
+        loginUiState.emailSignUp.isNotBlank() &&
+                loginUiState.passwordSignUp.isNotBlank()
 
 
     fun createUser(context: Context) = viewModelScope.launch {
@@ -67,23 +90,45 @@ class LoginViewModel(
             }
             loginUiState = loginUiState.copy(signUpError = null)
             repository.createUser(
-                loginUiState.userNameSignUp,
+                loginUiState.emailSignUp,
                 loginUiState.passwordSignUp
             ) { isSuccessful ->
-                if (isSuccessful) {
+                loginUiState = if (isSuccessful) {
                     Toast.makeText(
                         context,
-                        "success Login",
+                        "success Register",
                         Toast.LENGTH_SHORT
                     ).show()
-                    loginUiState = loginUiState.copy(isSuccessLogin = true)
+                    val db = Firebase.firestore
+                    val uId = Firebase.auth.currentUser?.uid
+
+                    val payload = hashMapOf(
+                        "department" to loginUiState.departmentSignUp,
+                        "email" to loginUiState.emailSignUp,
+                        "name" to loginUiState.nameSignUp,
+                        "admin" to false
+                    )
+
+
+                    if (uId != null) {
+                        db.collection("users").document(uId)
+                            .set(payload)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
+                                Log.d(TAG, "It should have worked")
+                            }
+                            .addOnFailureListener {(
+                                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show())
+                            }
+                    }
+                    loginUiState.copy(isSuccessLogin = true)
                 } else {
                     Toast.makeText(
                         context,
-                        "Failed Login",
+                        "Failed Register",
                         Toast.LENGTH_SHORT
                     ).show()
-                    loginUiState = loginUiState.copy(isSuccessLogin = false)
+                    loginUiState.copy(isSuccessLogin = false)
                 }
 
             }
@@ -107,21 +152,21 @@ class LoginViewModel(
             loginUiState = loginUiState.copy(isLoading = true)
             loginUiState = loginUiState.copy(loginError = null)
             repository.login(
-                loginUiState.userName,
+                loginUiState.email,
                 loginUiState.password
             ) { isSuccessful ->
                 loginUiState = if (isSuccessful) {
                     Toast.makeText(
                         context,
-                        "success Login",
+                        "Login Success",
                         Toast.LENGTH_SHORT
                     ).show()
                     loginUiState.copy(isSuccessLogin = true)
                 } else {
                     Toast.makeText(
                         context,
-                        loginUiState.userName + " " + loginUiState.password,
-                        Toast.LENGTH_SHORT
+                        "Login Failed",
+                        Toast.LENGTH_LONG
                     ).show()
                     loginUiState.copy(isSuccessLogin = false)
                 }
@@ -142,7 +187,7 @@ class LoginViewModel(
     fun resetPassword(context: Context) = viewModelScope.launch {
         try {
             repository.resetPassword(
-                loginUiState.userName
+                loginUiState.email
             ) { isSuccessful ->
                 loginUiState = if (isSuccessful) {
                     Toast.makeText(
@@ -174,16 +219,22 @@ class LoginViewModel(
     }
 
 
+
 }
 
 data class LoginUiState(
-    val userName: String = "",
+    val email: String = "",
     val password: String = "",
-    val userNameSignUp: String = "",
+
+    val nameSignUp: String = "",
+    val emailSignUp: String = "",
     val passwordSignUp: String = "",
+    val departmentSignUp: String = "",
     val confirmPasswordSignUp: String = "",
+
     val isLoading: Boolean = false,
     val isSuccessLogin: Boolean = false,
+    val isUserAdmin: Boolean = false,
     val signUpError: String? = null,
     val loginError: String? = null,
 )
