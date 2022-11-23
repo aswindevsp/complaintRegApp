@@ -203,7 +203,8 @@ fun Register(
                     fontSize = 12.sp
                 )
                 Button(
-                    onClick = { loginViewModel?.createUser(context) },
+                    onClick = {
+                        loginViewModel?.createUser(context, navController) },
                     shape = RoundedCornerShape(12.dp),
                     modifier= Modifier
                         .padding(all = 12.dp)
@@ -231,7 +232,7 @@ fun Register(
             )
             ClickableText(
                 text = AnnotatedString("Log in"),
-                onClick = { },
+                onClick = {navController.navigate("login") },
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color.Red

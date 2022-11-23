@@ -17,11 +17,11 @@ import com.mgits.complaintreg.ui.home.UserHomeViewModel
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
-    loginViewModel: LoginViewModel,
     startDestination: String = ROUTE_LOGIN
 ) {
 
-    val userHomeViewModel = viewModel(modelClass = UserHomeViewModel::class.java)
+    val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
+    val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
     NavHost(
         navController = navController,
         startDestination = startDestination

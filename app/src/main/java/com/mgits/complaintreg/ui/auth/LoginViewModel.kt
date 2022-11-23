@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -75,7 +76,7 @@ class LoginViewModel(
                 loginUiState.passwordSignUp.isNotBlank()
 
 
-    fun createUser(context: Context) = viewModelScope.launch {
+    fun createUser(context: Context, navController: NavController) = viewModelScope.launch {
         try {
             if (!validateSignupForm()) {
                 throw IllegalArgumentException("email and password can not be empty")
@@ -109,13 +110,14 @@ class LoginViewModel(
                         "admin" to false
                     )
 
-
                     if (uId != null) {
                         db.collection("users").document(uId)
                             .set(payload)
                             .addOnSuccessListener {
                                 Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
                                 Log.d(TAG, "It should have worked")
+                                navController.navigate("login")
+
                             }
                             .addOnFailureListener {(
                                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show())
