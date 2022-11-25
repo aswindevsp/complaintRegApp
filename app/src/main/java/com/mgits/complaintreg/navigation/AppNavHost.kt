@@ -10,7 +10,8 @@ import com.mgits.complaintreg.ui.auth.LoginScreen
 import com.mgits.complaintreg.ui.auth.LoginViewModel
 import com.mgits.complaintreg.ui.auth.Register
 import com.mgits.complaintreg.ui.home.UserHome
-import com.mgits.complaintreg.ui.home.AdminHome
+import com.mgits.complaintreg.ui.home.admin.AdminHome
+import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
 import com.mgits.complaintreg.ui.home.UserHomeViewModel
 
 
@@ -22,6 +23,10 @@ fun AppNavHost(
 
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
+
+    val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
+    val dataOrException = adminHomeViewModel.data.value
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -41,7 +46,7 @@ fun AppNavHost(
         }
 
         composable(ROUTE_ADMIN_HOME) {
-            AdminHome(navController)
+            AdminHome(dataOrException)
         }
 
         composable(ROUTE_REGISTER) {
@@ -51,4 +56,6 @@ fun AppNavHost(
 
         
     }
+
+
 }
