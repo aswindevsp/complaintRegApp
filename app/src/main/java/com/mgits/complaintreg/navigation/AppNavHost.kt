@@ -8,11 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mgits.complaintreg.ui.auth.LoginScreen
 import com.mgits.complaintreg.ui.auth.LoginViewModel
-import com.mgits.complaintreg.ui.auth.Register
+import com.mgits.complaintreg.ui.auth.register.Register
+import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
 import com.mgits.complaintreg.ui.home.UserHome
 import com.mgits.complaintreg.ui.home.admin.AdminHome
 import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
 import com.mgits.complaintreg.ui.home.UserHomeViewModel
+import com.mgits.complaintreg.ui.home.admin.details.DetailedView
 
 
 @Composable
@@ -23,6 +25,7 @@ fun AppNavHost(
 
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
+    val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
 
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
     val dataOrException = adminHomeViewModel.data.value
@@ -46,15 +49,20 @@ fun AppNavHost(
         }
 
         composable(ROUTE_ADMIN_HOME) {
-            AdminHome(dataOrException)
+            AdminHome(dataOrException, navController, adminHomeViewModel)
         }
 
         composable(ROUTE_REGISTER) {
-            Register(navController, loginViewModel)
+            Register(navController, registerViewModel)
+        }
+
+        composable(ROUTE_ADMIN_DET) {
+            DetailedView(dataOrException, adminHomeViewModel)
         }
 
 
-        
+
+
     }
 
 

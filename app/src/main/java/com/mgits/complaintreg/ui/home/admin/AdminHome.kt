@@ -7,20 +7,25 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalCoroutinesApi::class)
+
 @Composable
-fun AdminHome(dataOrException: DataOrException<List<Complaints>, Exception>) {
-    val products = dataOrException.data
-    products?.let {
+fun AdminHome(
+    dataOrException: DataOrException<List<Complaints>, Exception>,
+    navController: NavController,
+    viewModel: AdminHomeViewModel
+) {
+    val complaints = dataOrException.data
+    complaints?.let {
         LazyColumn {
             items(
-                items = products
+                items = complaints
             ) { complaints ->
-                ComplaintCard(complaints = complaints)
+                ComplaintCard(complaints = complaints, navController, viewModel)
             }
         }
     }

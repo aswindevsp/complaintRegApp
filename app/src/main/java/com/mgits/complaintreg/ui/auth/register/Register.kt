@@ -1,13 +1,9 @@
-package com.mgits.complaintreg.ui.auth
+package com.mgits.complaintreg.ui.auth.register
 
-import android.service.controls.ControlsProviderService
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -16,31 +12,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.complaintreg.R
-import kotlin.math.log
 
 @Composable
 fun Register(
     navController: NavController,
-    loginViewModel: LoginViewModel? = null
+    registerViewModel: RegisterViewModel? = null
 ){
 
-    val loginUiState = loginViewModel?.loginUiState
+    val registerUiState = registerViewModel?.registerUiState
     val context = LocalContext.current
 
     Row(
@@ -120,8 +108,8 @@ fun Register(
             )
             {
                 OutlinedTextField(
-                    value = loginUiState?.nameSignUp?:"",
-                    onValueChange = { loginViewModel?.onNameChangeSignup(it)},
+                    value = registerUiState?.nameSignUp?:"",
+                    onValueChange = { registerViewModel?.onNameChangeSignup(it)},
                     label = {
                         Text(
                             text = "Name",
@@ -133,8 +121,8 @@ fun Register(
                         .padding(vertical = 5.dp)
                 )
                 OutlinedTextField(
-                    value = loginUiState?.emailSignUp?:"",
-                    onValueChange = { loginViewModel?.onEmailChangeSignup(it) },
+                    value = registerUiState?.emailSignUp?:"",
+                    onValueChange = { registerViewModel?.onEmailChangeSignup(it) },
                     leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
                     label = {
                         Text(
@@ -148,8 +136,8 @@ fun Register(
                 )
 
                 OutlinedTextField(
-                    value = loginUiState?.passwordSignUp?:"",
-                    onValueChange = {loginViewModel?.onPasswordChangeSignup(it)},
+                    value = registerUiState?.passwordSignUp?:"",
+                    onValueChange = {registerViewModel?.onPasswordChangeSignup(it)},
                     leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Password") },
                     label = {
                         Text(
@@ -162,8 +150,8 @@ fun Register(
                         .padding(vertical = 5.dp)
                 )
                 OutlinedTextField(
-                    value = loginUiState?.confirmPasswordSignUp?:"",
-                    onValueChange = {loginViewModel?.onConfirmPasswordChange(it)},
+                    value = registerUiState?.confirmPasswordSignUp?:"",
+                    onValueChange = {registerViewModel?.onConfirmPasswordChange(it)},
                     label = {
                         Text(
                             text = "Confirm Password",
@@ -180,8 +168,8 @@ fun Register(
                         .padding(all=5.dp)
                 )
                 OutlinedTextField(
-                    value = loginUiState?.departmentSignUp?:"",
-                    onValueChange = { loginViewModel?.onDepartmentChangeSignup(it)},
+                    value = registerUiState?.departmentSignUp?:"",
+                    onValueChange = { registerViewModel?.onDepartmentChangeSignup(it)},
                     label = {
                         Text(
                             text = "Department",
@@ -204,7 +192,7 @@ fun Register(
                 )
                 Button(
                     onClick = {
-                        loginViewModel?.createUser(context, navController) },
+                        registerViewModel?.createUser(context, navController) },
                     shape = RoundedCornerShape(12.dp),
                     modifier= Modifier
                         .padding(all = 12.dp)

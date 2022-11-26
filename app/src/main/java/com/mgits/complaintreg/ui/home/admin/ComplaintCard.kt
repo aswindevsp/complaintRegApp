@@ -13,13 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ComplaintCard(
-    complaints: Complaints
+    complaints: Complaints, navController: NavController, viewModel: AdminHomeViewModel
 ) {
     val context = LocalContext.current
     Card(
@@ -33,7 +34,10 @@ fun ComplaintCard(
             )
             .fillMaxWidth(),
         elevation = 3.dp,
-        onClick = {Toast.makeText(context, complaints.userId, Toast.LENGTH_LONG).show()}
+        onClick = {
+            complaints.complaintId?.let { viewModel.updateCmpId(it) }
+            navController.navigate("detailed-view")
+        }
     ) {
         Column(
             modifier = Modifier
@@ -41,7 +45,7 @@ fun ComplaintCard(
                 .height(100.dp)
                 .padding(all = 12.dp)
         ){
-            complaints.title?.let { title ->
+            complaints.name?.let { title ->
                 Text(
                     text = title,
                     modifier = Modifier

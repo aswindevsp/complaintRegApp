@@ -4,6 +4,7 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.*
 
 data class Complaints(
+    var complaintId: String? = null,
     var complaintType: String? = null,
     var description: String? = null,
     var name: String? = null,

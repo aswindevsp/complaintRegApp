@@ -7,8 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.mgits.complaintreg.utils.Constants.NAME_PROPERTY
 import com.mgits.complaintreg.utils.Constants.PRODUCTS_COLLECTION
+import com.mgits.complaintreg.utils.Constants.TIME_PROPERTY
 import javax.inject.Singleton
 
 @Module
@@ -18,5 +18,5 @@ object AppModule {
     @Singleton
     fun provideQueryProductsByName() = FirebaseFirestore.getInstance()
         .collection(PRODUCTS_COLLECTION)
-        .orderBy(NAME_PROPERTY, ASCENDING)
+        .orderBy(TIME_PROPERTY, ASCENDING)
 }

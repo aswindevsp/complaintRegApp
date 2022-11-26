@@ -2,6 +2,7 @@ package com.mgits.complaintreg.ui.home
 
 import android.content.Context
 import android.service.controls.ControlsProviderService
+import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
@@ -58,15 +59,19 @@ class UserHomeViewModel(): ViewModel() {
                     .getString("name")
             }
 
+            val complaintId = db.collection("complaints").document().id
+
             val payload = hashMapOf(
                 "userId" to uId,
+                "complaintId" to complaintId,
                 "name" to name,
                 "title" to homeUiState.title,
                 "complaintType" to homeUiState.complaintType,
                 "description" to homeUiState.Description,
                 "status" to "pending"
             )
-            db.collection("complaints").document()
+
+            db.collection("complaints").document(complaintId)
                 .set(payload)
                 .addOnSuccessListener {
                     Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
