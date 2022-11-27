@@ -1,11 +1,9 @@
 package com.mgits.complaintreg.ui.auth.register
 
 import android.content.Context
-import android.os.Build
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,130 +14,121 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
+import com.mgits.complaintreg.ui.auth.use_cases.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val repository: AuthRepository = AuthRepository(),
+    private val validateName: ValidateName = ValidateName(),
+    private val validateEmail: ValidateEmail = ValidateEmail(), //Change this to dependency injection in future
+    private val validatePassword: ValidatePassword = ValidatePassword(),
+    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
+    private val validateDepartment: ValidateDepartment = ValidateDepartment()
 ) : ViewModel() {
 
 
-    var registerUiState by mutableStateOf(RegisterUiState())
-        private set
+    var state by mutableStateOf(RegistrationFormState())
 
+    private val validationEventChannel = Channel<ValidationEvent>()
+    val validationEvents = validationEventChannel.receiveAsFlow()
 
-    //For register
-    fun onNameChangeSignup(nameSignUp: String) {
-        registerUiState = registerUiState.copy(nameSignUp = nameSignUp)
-    }
-    fun onEmailChangeSignup(emailSignUp: String) {
-        registerUiState = registerUiState.copy(emailSignUp = emailSignUp)
-    }
-
-    fun onPasswordChangeSignup(password: String) {
-        registerUiState = registerUiState.copy(passwordSignUp = password)
-    }
-
-    fun onConfirmPasswordChange(password: String) {
-        registerUiState = registerUiState.copy(confirmPasswordSignUp = password)
-    }
-
-    fun onDepartmentChangeSignup(departmentSignUp: String) {
-        registerUiState = registerUiState.copy(departmentSignUp = departmentSignUp)
-    }
-
-
-    private fun validateSignupForm() =
-        registerUiState.emailSignUp.isNotBlank() &&
-                registerUiState.passwordSignUp.isNotBlank()
-
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    fun createUser(context: Context, navController: NavController) = viewModelScope.launch {
-        try {
-            if (!validateSignupForm()) {
-                throw IllegalArgumentException("email and password can not be empty")
+    fun onEvent(event: RegistrationFormEvent, navController: NavController, context: Context) {
+        when (event) {
+            is RegistrationFormEvent.NameChanged-> {
+                state = state.copy(name = event.name)
             }
-            registerUiState = registerUiState.copy(isLoading = true)
-            if (registerUiState.passwordSignUp !=
-                registerUiState.confirmPasswordSignUp
-            ) {
-                throw IllegalArgumentException(
-                    "Password do not match"
-                )
+            is RegistrationFormEvent.EmailChanged -> {
+                state = state.copy(email = event.email)
             }
-            registerUiState = registerUiState.copy(signUpError = null)
-            repository.createUser(
-                registerUiState.emailSignUp,
-                registerUiState.passwordSignUp
-            ) { isSuccessful ->
-                registerUiState = if (isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "success Register",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    val db = Firebase.firestore
-                    val uId = Firebase.auth.currentUser?.uid
-
-                    val payload = hashMapOf(
-                        "department" to registerUiState.departmentSignUp,
-                        "email" to registerUiState.emailSignUp,
-                        "name" to registerUiState.nameSignUp,
-                        "admin" to false
-                    )
-
-                    if (uId != null) {
-                        db.collection("users").document(uId)
-                            .set(payload)
-                            .addOnSuccessListener {
-                                Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
-                                Log.d(TAG, "It should have worked")
-                                navController.navigate("login")
-
-                            }
-                            .addOnFailureListener {(
-                                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show())
-                            }
-                    }
-                    registerUiState.copy(isSuccessLogin = true)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Failed Register",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    registerUiState.copy(isSuccessLogin = false)
-                }
-
+            is RegistrationFormEvent.PasswordChanged -> {
+                state = state.copy(password = event.password)
             }
+            is RegistrationFormEvent.RepeatedPasswordChanged -> {
+                state = state.copy(repeatedPassword = event.repeatedPassword)
+            }
+            is RegistrationFormEvent.DepartmentChanged -> {
+                state = state.copy(department = event.department)
+            }
+            is RegistrationFormEvent.Submit -> {
+                submitData(navController, context)
+            }
+        }
+    }
 
+    private fun submitData(navController: NavController, context: Context) {
+        val nameResult = validateName.execute(state.name)
+        val emailResult = validateEmail.execute(state.email)
+        val passwordResult = validatePassword.execute(state.password)
+        val repeatedPasswordResult = validateRepeatedPassword.execute(
+            state.password, state.repeatedPassword
+        )
+        val departmentResult = validateDepartment.execute(state.department)
 
-        } catch (e: Exception) {
-            registerUiState = registerUiState.copy(signUpError = e.localizedMessage)
-            e.printStackTrace()
-        } finally {
-            registerUiState = registerUiState.copy(isLoading = false)
+        val hasError = listOf(
+            nameResult,
+            emailResult,
+            passwordResult,
+            repeatedPasswordResult,
+            departmentResult
+        ).any { !it.successful }
+
+        if (hasError) {
+            state = state.copy(
+                nameError = nameResult.errorMessage,
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+                repeatedPasswordError = repeatedPasswordResult.errorMessage,
+                departmentError = departmentResult.errorMessage
+            )
+            return
         }
 
+       viewModelScope.launch {
+           repository.createUser(
+               state.email,
+               state.password
+           ) { isSuccessful ->
+               state = if (isSuccessful) {
+                   Log.d(TAG, "asdf userCreate success")
+                   val db = Firebase.firestore
+                   val uId = Firebase.auth.currentUser?.uid
 
+                   val payload = hashMapOf(
+                       "department" to state.department,
+                       "email" to state.email,
+                       "name" to state.name,
+                       "admin" to false
+                   )
+
+                   if (uId != null) {
+                       db.collection("users").document(uId)
+                           .set(payload)
+                           .addOnSuccessListener {
+                               Log.d(TAG, "asdf user datils added to db")
+                               Log.d(TAG, "It should have worked")
+                               navController.navigate("login")
+
+                           }
+                           .addOnFailureListener {
+                               (
+                                       Toast.makeText(context, "Wow! That shouldn't have happened. Contact admin.", Toast.LENGTH_LONG).show())
+                           }
+                   }
+                   state.copy(isSuccessLogin = true)
+               } else {
+                   Toast.makeText(context, "Account Already exists", Toast.LENGTH_LONG).show()
+                   state.copy(isSuccessLogin = false)
+               }
+
+           }
+       }
     }
 
-
+    sealed class ValidationEvent {
+        object Success : ValidationEvent()
+    }
 }
 
-data class RegisterUiState(
-    val email: String = "",
-    val password: String = "",
 
-    val nameSignUp: String = "",
-    val emailSignUp: String = "",
-    val passwordSignUp: String = "",
-    val departmentSignUp: String = "",
-    val confirmPasswordSignUp: String = "",
-
-    val isLoading: Boolean = false,
-    val isSuccessLogin: Boolean = false,
-    val isUserAdmin: Boolean = false,
-    val signUpError: String? = null,
-    val loginError: String? = null,
-)

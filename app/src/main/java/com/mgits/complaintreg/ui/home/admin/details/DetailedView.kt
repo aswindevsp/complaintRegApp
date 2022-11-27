@@ -12,12 +12,15 @@ import java.util.*
 
 @Composable
 fun DetailedView(
-    dataOrException: DataOrException<List<Complaints>, Exception>,
     viewModel: AdminHomeViewModel
 ) {
-    
-    val complaints = dataOrException.data
-    
-    Text(text = viewModel.cmpId)
+
+    Column() {
+        Text(text = viewModel.tempCompDetails.title.toString())
+        Text(text = viewModel.tempCompDetails.description.toString())
+        Text(text = viewModel.tempCompDetails.status.toString())
+        Text(text = viewModel.tempCompDetails.name.toString())
+
+    }
 
 }

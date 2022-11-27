@@ -22,6 +22,7 @@ import com.mgits.complaintreg.data.Complaints
 fun ComplaintCard(
     complaints: Complaints, navController: NavController, viewModel: AdminHomeViewModel
 ) {
+
     val context = LocalContext.current
     Card(
         shape = MaterialTheme.shapes.small,
@@ -35,7 +36,7 @@ fun ComplaintCard(
             .fillMaxWidth(),
         elevation = 3.dp,
         onClick = {
-            complaints.complaintId?.let { viewModel.updateCmpId(it) }
+            complaints.complaintId?.let { viewModel.updateCmpId(complaints) }
             navController.navigate("detailed-view")
         }
     ) {

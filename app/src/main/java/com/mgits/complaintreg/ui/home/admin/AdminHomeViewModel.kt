@@ -2,9 +2,9 @@ package com.mgits.complaintreg.ui.home.admin
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
 import com.mgits.complaintreg.repository.StorageRepository
@@ -20,6 +20,13 @@ class AdminHomeViewModel @Inject constructor(
     var loading = mutableStateOf(false)
 
     var cmpId: String = ""
+
+    var tempCompDetails: Complaints = Complaints("", "", "", "", "", "", "", )
+
+    fun updateCmpId(id: Complaints) {
+        tempCompDetails = id
+    }
+
     val data: MutableState<DataOrException<List<Complaints>, Exception>> = mutableStateOf(
         DataOrException(
             listOf(),
@@ -39,7 +46,5 @@ class AdminHomeViewModel @Inject constructor(
         }
     }
 
-    fun updateCmpId(id: String) {
-            cmpId = id
-    }
+
 }

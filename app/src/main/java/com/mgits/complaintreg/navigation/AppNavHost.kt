@@ -1,5 +1,7 @@
 package com.mgits.complaintreg.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -7,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mgits.complaintreg.ui.auth.LoginScreen
-import com.mgits.complaintreg.ui.auth.LoginViewModel
+import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 import com.mgits.complaintreg.ui.auth.register.Register
 import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
 import com.mgits.complaintreg.ui.home.UserHome
@@ -17,6 +19,8 @@ import com.mgits.complaintreg.ui.home.UserHomeViewModel
 import com.mgits.complaintreg.ui.home.admin.details.DetailedView
 
 
+
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
@@ -57,11 +61,8 @@ fun AppNavHost(
         }
 
         composable(ROUTE_ADMIN_DET) {
-            DetailedView(dataOrException, adminHomeViewModel)
+            DetailedView(adminHomeViewModel)
         }
-
-
-
 
     }
 

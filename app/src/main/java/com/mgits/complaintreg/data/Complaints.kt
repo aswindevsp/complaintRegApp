@@ -1,7 +1,7 @@
 package com.mgits.complaintreg.data
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
-import java.util.*
 
 data class Complaints(
     var complaintId: String? = null,
@@ -13,5 +13,5 @@ data class Complaints(
     var userId: String? = null,
 
     @ServerTimestamp
-    var time: Date? = null
+    var time: Timestamp? = null
 )
