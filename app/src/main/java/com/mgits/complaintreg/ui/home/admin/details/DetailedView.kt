@@ -18,8 +18,6 @@ fun DetailedView(
     Column() {
         Text(text = viewModel.tempCompDetails.title.toString())
         Text(text = viewModel.tempCompDetails.description.toString())
-        //Text(text = viewModel.tempCompDetails.complaintType.toString())
-        Text(text = viewModel.tempCompDetails.description.toString())
         Text(text = viewModel.tempCompDetails.status.toString())
         Text(text = viewModel.tempCompDetails.name.toString())
 
