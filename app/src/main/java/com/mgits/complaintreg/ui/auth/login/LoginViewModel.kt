@@ -1,7 +1,6 @@
-package com.mgits.complaintreg.ui.auth
+package com.mgits.complaintreg.ui.auth.login
 
 import android.content.Context
-import android.service.controls.ControlsProviderService
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
@@ -16,7 +15,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class LoginViewModel(
     private val repository: AuthRepository = AuthRepository(),

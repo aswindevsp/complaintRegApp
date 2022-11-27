@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -33,8 +34,7 @@ fun Register(
     viewModel: RegisterViewModel? = null
 ) {
     val state = viewModel?.state
-
-
+    val context = LocalContext.current
     Row(
         horizontalArrangement = Arrangement.End,
         modifier = Modifier
@@ -116,7 +116,11 @@ fun Register(
                     OutlinedTextField(
                         value = state.name,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.NameChanged(it), navController)
+                            viewModel.onEvent(
+                                RegistrationFormEvent.NameChanged(it),
+                                navController,
+                                context
+                            )
                         },
                         isError = state.emailError != null,
                         label = {
@@ -147,7 +151,11 @@ fun Register(
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.EmailChanged(it), navController)
+                            viewModel.onEvent(
+                                RegistrationFormEvent.EmailChanged(it),
+                                navController,
+                                context
+                            )
                         },
                         isError = state.emailError != null,
                         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
@@ -182,7 +190,11 @@ fun Register(
                         value = state.password,
 
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it), navController)
+                            viewModel.onEvent(
+                                RegistrationFormEvent.PasswordChanged(it),
+                                navController,
+                                context
+                            )
                         },
                         isError = state.passwordError != null,
                         label = {
@@ -215,7 +227,11 @@ fun Register(
                     OutlinedTextField(
                         value = state.repeatedPassword,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it), navController)
+                            viewModel.onEvent(
+                                RegistrationFormEvent.RepeatedPasswordChanged(it),
+                                navController,
+                                context
+                            )
                         },
                         isError = state.repeatedPasswordError != null,
                         label = {
@@ -262,7 +278,11 @@ fun Register(
                             Text(text = name)
                         },
                         onDropDownItemSelected = {
-                            viewModel.onEvent(RegistrationFormEvent.DepartmentChanged(it), navController)
+                            viewModel.onEvent(
+                                RegistrationFormEvent.DepartmentChanged(it),
+                                navController,
+                                context
+                            )
                         },
                         isError = state.departmentError != null,
                     )
@@ -292,7 +312,7 @@ fun Register(
                 )
                 Button(
                     onClick = {
-                        viewModel?.onEvent(RegistrationFormEvent.Submit, navController)
+                        viewModel?.onEvent(RegistrationFormEvent.Submit, navController, context)
                     },
                     shape = RoundedCornerShape(12.dp),
                     modifier= Modifier
@@ -330,14 +350,4 @@ fun Register(
         }
     }
 
-
-//    LaunchedEffect(viewModel) {
-//        viewModel?.validationEvents?.collect { event ->
-//            when (event) {
-//                is RegisterViewModel.ValidationEvent.Success -> {
-//                    Reg
-//                }
-//            }
-//        }
-//    }
 }

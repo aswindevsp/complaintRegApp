@@ -1,11 +1,9 @@
 package com.mgits.complaintreg.ui.auth.register
 
 import android.content.Context
-import android.os.Build
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +15,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import com.mgits.complaintreg.ui.auth.use_cases.*
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -37,7 +34,7 @@ class RegisterViewModel(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
-    fun onEvent(event: RegistrationFormEvent, navController: NavController) {
+    fun onEvent(event: RegistrationFormEvent, navController: NavController, context: Context) {
         when (event) {
             is RegistrationFormEvent.NameChanged-> {
                 state = state.copy(name = event.name)
@@ -55,12 +52,12 @@ class RegisterViewModel(
                 state = state.copy(department = event.department)
             }
             is RegistrationFormEvent.Submit -> {
-                submitData(navController)
+                submitData(navController, context)
             }
         }
     }
 
-    private fun submitData(navController: NavController) {
+    private fun submitData(navController: NavController, context: Context) {
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)
         val passwordResult = validatePassword.execute(state.password)
@@ -116,13 +113,12 @@ class RegisterViewModel(
                            }
                            .addOnFailureListener {
                                (
-                                       Log.d(TAG, "asdf That should't have happened")
-                                       )
+                                       Toast.makeText(context, "Wow! That shouldn't have happened. Contact admin.", Toast.LENGTH_LONG).show())
                            }
                    }
                    state.copy(isSuccessLogin = true)
                } else {
-                   Log.d(TAG, "asdf Reg failed")
+                   Toast.makeText(context, "Account Already exists", Toast.LENGTH_LONG).show()
                    state.copy(isSuccessLogin = false)
                }
 
