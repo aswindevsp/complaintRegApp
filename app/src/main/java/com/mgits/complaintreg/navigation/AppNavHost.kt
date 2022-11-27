@@ -1,5 +1,7 @@
 package com.mgits.complaintreg.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -17,6 +19,7 @@ import com.mgits.complaintreg.ui.home.UserHomeViewModel
 import com.mgits.complaintreg.ui.home.admin.details.DetailedView
 
 
+@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),

@@ -78,6 +78,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
+
+    //dropdown
+    implementation 'com.github.Breens-Mbaka:Searchable-Dropdown-Menu-Jetpack-Compose:0.2.4'
 }
 
 kapt {
