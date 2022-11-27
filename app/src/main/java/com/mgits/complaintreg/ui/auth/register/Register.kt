@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.complaintreg.R
@@ -40,7 +38,8 @@ fun Register(
     Row(
         horizontalArrangement = Arrangement.End,
         modifier = Modifier
-            .padding(vertical = 26.dp,
+            .padding(
+                vertical = 26.dp,
                 horizontal = 12.dp
             )
             .fillMaxWidth()
@@ -117,7 +116,7 @@ fun Register(
                     OutlinedTextField(
                         value = state.name,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.NameChanged(it))
+                            viewModel.onEvent(RegistrationFormEvent.NameChanged(it), navController)
                         },
                         isError = state.emailError != null,
                         label = {
@@ -148,7 +147,7 @@ fun Register(
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.EmailChanged(it))
+                            viewModel.onEvent(RegistrationFormEvent.EmailChanged(it), navController)
                         },
                         isError = state.emailError != null,
                         leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
@@ -183,7 +182,7 @@ fun Register(
                         value = state.password,
 
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it))
+                            viewModel.onEvent(RegistrationFormEvent.PasswordChanged(it), navController)
                         },
                         isError = state.passwordError != null,
                         label = {
@@ -216,7 +215,7 @@ fun Register(
                     OutlinedTextField(
                         value = state.repeatedPassword,
                         onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it))
+                            viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(it), navController)
                         },
                         isError = state.repeatedPasswordError != null,
                         label = {
@@ -250,23 +249,25 @@ fun Register(
                     modifier = Modifier
                         .padding(all=5.dp)
                 )
+
                 if (state != null) {
-                    OutlinedTextField(
-                        value = state.department,
-                        onValueChange = {
-                            viewModel.onEvent(RegistrationFormEvent.DepartmentChanged(it))},
-                        isError = state.departmentError != null,
-                        label = {
-                            Text(
-                                text = "Department",
-                                fontSize = 15.sp,
-                            )
-                        },
+                    ExpandedDropDown(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 5.dp)
+                            .fillMaxWidth(),
+                        listOfItems = listOf("CE", "ME", "ECE", "EEE", "CS-A", "CS-B", "CS(AI)", "CS(AI&DS)", "CS(Cybersecurity)"),
+                        enable = true,
+                        parentTextFieldCornerRadius = 5.dp,
+                        placeholder = "Department",
+                        dropdownItem = {name ->
+                            Text(text = name)
+                        },
+                        onDropDownItemSelected = {
+                            viewModel.onEvent(RegistrationFormEvent.DepartmentChanged(it), navController)
+                        },
+                        isError = state.departmentError != null,
                     )
                 }
+
                 if (state != null) {
                     if (state.departmentError != null) {
                         Text(
@@ -277,6 +278,8 @@ fun Register(
                         )
                     }
                 }
+
+
 
                 Divider(
                     modifier = Modifier
@@ -289,7 +292,7 @@ fun Register(
                 )
                 Button(
                     onClick = {
-                        viewModel?.onEvent(RegistrationFormEvent.Submit)
+                        viewModel?.onEvent(RegistrationFormEvent.Submit, navController)
                     },
                     shape = RoundedCornerShape(12.dp),
                     modifier= Modifier
@@ -326,4 +329,15 @@ fun Register(
             )
         }
     }
+
+
+//    LaunchedEffect(viewModel) {
+//        viewModel?.validationEvents?.collect { event ->
+//            when (event) {
+//                is RegisterViewModel.ValidationEvent.Success -> {
+//                    Reg
+//                }
+//            }
+//        }
+//    }
 }

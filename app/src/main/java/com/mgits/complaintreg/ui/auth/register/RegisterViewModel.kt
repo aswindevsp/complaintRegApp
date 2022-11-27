@@ -17,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import com.mgits.complaintreg.ui.auth.use_cases.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class RegisterViewModel(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
-    fun onEvent(event: RegistrationFormEvent) {
+    fun onEvent(event: RegistrationFormEvent, navController: NavController) {
         when (event) {
             is RegistrationFormEvent.NameChanged-> {
                 state = state.copy(name = event.name)
@@ -54,12 +55,12 @@ class RegisterViewModel(
                 state = state.copy(department = event.department)
             }
             is RegistrationFormEvent.Submit -> {
-                submitData()
+                submitData(navController)
             }
         }
     }
 
-    private fun submitData() {
+    private fun submitData(navController: NavController) {
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)
         val passwordResult = validatePassword.execute(state.password)
@@ -86,9 +87,47 @@ class RegisterViewModel(
             )
             return
         }
-        viewModelScope.launch {
-            validationEventChannel.send(ValidationEvent.Success)
-        }
+
+       viewModelScope.launch {
+           repository.createUser(
+               state.email,
+               state.password
+           ) { isSuccessful ->
+               state = if (isSuccessful) {
+                   Log.d(TAG, "asdf userCreate success")
+                   val db = Firebase.firestore
+                   val uId = Firebase.auth.currentUser?.uid
+
+                   val payload = hashMapOf(
+                       "department" to state.department,
+                       "email" to state.email,
+                       "name" to state.name,
+                       "admin" to false
+                   )
+
+                   if (uId != null) {
+                       db.collection("users").document(uId)
+                           .set(payload)
+                           .addOnSuccessListener {
+                               Log.d(TAG, "asdf user datils added to db")
+                               Log.d(TAG, "It should have worked")
+                               navController.navigate("login")
+
+                           }
+                           .addOnFailureListener {
+                               (
+                                       Log.d(TAG, "asdf That should't have happened")
+                                       )
+                           }
+                   }
+                   state.copy(isSuccessLogin = true)
+               } else {
+                   Log.d(TAG, "asdf Reg failed")
+                   state.copy(isSuccessLogin = false)
+               }
+
+           }
+       }
     }
 
     sealed class ValidationEvent {
