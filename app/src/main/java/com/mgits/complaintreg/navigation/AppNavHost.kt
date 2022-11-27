@@ -8,7 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mgits.complaintreg.ui.auth.LoginScreen
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.mgits.complaintreg.ui.auth.login.LoginScreen
 import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 import com.mgits.complaintreg.ui.auth.register.Register
 import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
@@ -24,15 +27,16 @@ import com.mgits.complaintreg.ui.home.admin.details.DetailedView
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUTE_LOGIN
 ) {
-
+    var startDestination: String = ROUTE_LOGIN
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
 
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
     val dataOrException = adminHomeViewModel.data.value
+
+
 
     NavHost(
         navController = navController,

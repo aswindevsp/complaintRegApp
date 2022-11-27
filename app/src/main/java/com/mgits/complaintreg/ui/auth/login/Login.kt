@@ -1,4 +1,4 @@
-package com.mgits.complaintreg.ui.auth
+package com.mgits.complaintreg.ui.auth.login
 
 
 import androidx.compose.foundation.*
@@ -6,6 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,10 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +41,11 @@ fun LoginScreen(
     val isError = loginUiState?.loginError != null
     val context = LocalContext.current
 
+
+    var password by remember { mutableStateOf("") }
+
+    // Creating a variable to store toggle state
+    var passwordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = loginViewModel?.hasUser){
         if (loginViewModel?.hasUser == true){
@@ -112,22 +119,28 @@ fun LoginScreen(
             ) {
                 OutlinedTextField(
                     value = loginUiState?.email ?: "",
-                    onValueChange = {loginViewModel?.onEmailChange(it)},
+                    onValueChange = { loginViewModel?.onEmailChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "emailIcon"
+                        )
+                    },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
                     ),
-                    placeholder = { Text(text = "abc@mgits.ac.in")},
-                    label = { Text(text = "Email")},
+                    placeholder = { Text(text = "abc@mgits.ac.in") },
+                    label = { Text(text = "Email") },
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
+                ) {
                     if (loginViewModel != null) {
                         if (loginViewModel.validateEmail()) {
                             Text(
@@ -146,15 +159,38 @@ fun LoginScreen(
                     onValueChange = { loginViewModel?.onPasswordChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "lockIcon"
+                        )
+                    },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
-                    visualTransformation = PasswordVisualTransformation(),
-                    placeholder = { Text(text = "******")},
-                    label = {Text(text = "Password")}
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    label = { Text(text = "Password") },
+                    trailingIcon = {
+                        if (loginUiState != null) {
+                            if (loginUiState.password.isNotBlank()) {
+                                val image = if (passwordVisible)
+                                    Icons.Filled.Visibility
+                                else Icons.Filled.VisibilityOff
+
+                                // Localized description for accessibility services
+                                val description =
+                                    if (passwordVisible) "Hide password" else "Show password"
+
+                                // Toggle button to hide or display password
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Icon(imageVector = image, description)
+                                }
+                            }
+                        }
+                    }
 
                 )
 
@@ -211,7 +247,6 @@ fun LoginScreen(
         if (loginUiState?.isLoading == true){
             CircularProgressIndicator()
         }
-
 
 
     }
