@@ -9,6 +9,9 @@ import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
 import com.mgits.complaintreg.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +20,8 @@ class AdminHomeViewModel @Inject constructor(
     private  val repository: StorageRepository
 ): ViewModel() {
 
-    var loading = mutableStateOf(false)
+    private val _isLoading = MutableStateFlow(false)
+    var isLoading = _isLoading.asStateFlow()
 
     var cmpId: String = ""
 
@@ -38,13 +42,20 @@ class AdminHomeViewModel @Inject constructor(
         getComplaints()
     }
 
-    private fun getComplaints() {
+    fun getComplaints() {
         viewModelScope.launch {
-            loading.value = true
+            _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
-            loading.value = false
+            delay(1500)
+            _isLoading.value = false
         }
     }
+
+
+
+
+
+
 
 
 }

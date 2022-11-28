@@ -9,7 +9,9 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,12 +46,8 @@ fun Register(
             )
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(id= R.drawable.question),
-            contentDescription ="",
-            modifier = Modifier
-                .size(30.dp)
-        )
+        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Arrow Back")
+
     }
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -203,6 +201,7 @@ fun Register(
                                 fontSize = 15.sp,
                             )
                         },
+                        leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "emailIcon") },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password
                         ),

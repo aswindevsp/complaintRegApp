@@ -39,26 +39,6 @@ class LoginViewModel(
     }
 
 
-    //For register
-    fun onNameChangeSignup(nameSignUp: String) {
-        loginUiState = loginUiState.copy(nameSignUp = nameSignUp)
-    }
-    fun onEmailChangeSignup(emailSignUp: String) {
-        loginUiState = loginUiState.copy(emailSignUp = emailSignUp)
-    }
-
-    fun onPasswordChangeSignup(password: String) {
-        loginUiState = loginUiState.copy(passwordSignUp = password)
-    }
-
-    fun onConfirmPasswordChange(password: String) {
-        loginUiState = loginUiState.copy(confirmPasswordSignUp = password)
-    }
-
-    fun onDepartmentChangeSignup(departmentSignUp: String) {
-        loginUiState = loginUiState.copy(departmentSignUp = departmentSignUp)
-    }
-
 
     fun validateEmail(): Boolean {
         val domain = loginUiState.email.split("@")
