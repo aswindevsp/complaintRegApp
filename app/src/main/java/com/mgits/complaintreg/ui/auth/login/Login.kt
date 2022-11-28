@@ -119,28 +119,23 @@ fun LoginScreen(
             ) {
                 OutlinedTextField(
                     value = loginUiState?.email ?: "",
-                    onValueChange = { loginViewModel?.onEmailChange(it) },
+                    onValueChange = {loginViewModel?.onEmailChange(it)},
                     modifier = Modifier
                         .fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "emailIcon"
-                        )
-                    },
+                    leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
                     ),
-                    placeholder = { Text(text = "abc@mgits.ac.in") },
-                    label = { Text(text = "Email") },
+                    placeholder = { Text(text = "abc@mgits.ac.in")},
+                    label = { Text(text = "Email")},
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
+                ){
                     if (loginViewModel != null) {
                         if (loginViewModel.validateEmail()) {
                             Text(
@@ -159,12 +154,7 @@ fun LoginScreen(
                     onValueChange = { loginViewModel?.onPasswordChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "lockIcon"
-                        )
-                    },
+                    leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "lockIcon") },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
@@ -172,10 +162,11 @@ fun LoginScreen(
                         imeAction = ImeAction.Done
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    label = { Text(text = "Password") },
+                    placeholder = { Text(text = "******")},
+                    label = {Text(text = "Password")},
                     trailingIcon = {
                         if (loginUiState != null) {
-                            if (loginUiState.password.isNotBlank()) {
+                            if(loginUiState.password.isNotBlank()) {
                                 val image = if (passwordVisible)
                                     Icons.Filled.Visibility
                                 else Icons.Filled.VisibilityOff
