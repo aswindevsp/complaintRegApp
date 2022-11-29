@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
@@ -59,8 +60,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyContent(
 ) {
-   ExpandedDropDown(listOfItems = listOf("a", "b")) {
-       Text(text = "hello worl")
-   }
+
 }
 

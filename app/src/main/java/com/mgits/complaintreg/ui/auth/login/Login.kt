@@ -4,6 +4,7 @@ package com.mgits.complaintreg.ui.auth.login
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -155,6 +156,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "lockIcon") },
+                    keyboardActions = KeyboardActions(onDone = {loginViewModel?.loginUser(context)}),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,

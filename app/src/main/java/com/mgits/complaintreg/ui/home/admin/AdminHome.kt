@@ -9,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -35,7 +33,9 @@ fun AdminHome(
 
     val complaints = dataOrException.data
 
-
+    if(dataOrException.data == null){
+        viewModel.getComplaints()
+    }
 
     complaints?.let {
         Box(Modifier.pullRefresh(swipeRefreshState)) {

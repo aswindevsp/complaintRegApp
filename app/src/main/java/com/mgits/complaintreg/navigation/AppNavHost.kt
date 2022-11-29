@@ -8,17 +8,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.ui.auth.login.LoginScreen
 import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 import com.mgits.complaintreg.ui.auth.register.Register
 import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
-import com.mgits.complaintreg.ui.home.UserHome
+import com.mgits.complaintreg.ui.home.user.UserHome
 import com.mgits.complaintreg.ui.home.admin.AdminHome
 import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
-import com.mgits.complaintreg.ui.home.UserHomeViewModel
+import com.mgits.complaintreg.ui.home.user.UserHomeViewModel
 import com.mgits.complaintreg.ui.home.admin.details.DetailedView
 
 

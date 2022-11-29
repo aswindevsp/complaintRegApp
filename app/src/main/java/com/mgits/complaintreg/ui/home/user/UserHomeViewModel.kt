@@ -1,24 +1,20 @@
-package com.mgits.complaintreg.ui.home
+package com.mgits.complaintreg.ui.home.user
 
 import android.content.Context
-import android.service.controls.ControlsProviderService
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import io.grpc.util.GracefulSwitchLoadBalancer
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -41,45 +37,63 @@ class UserHomeViewModel(): ViewModel() {
     fun onDescriptionChange(Description: String) {
         homeUiState = homeUiState.copy(Description = Description)
     }
+    fun onDateChange(date: LocalDate) {
+        homeUiState = homeUiState.copy(date = date)
+    }
 
-    private fun getName(uId: String){
-
+    private fun checkForms(): Boolean {
+        return if(homeUiState.title.isBlank())
+            false
+        else if(homeUiState.Description.isBlank())
+            false
+        else homeUiState.complaintType.isNotBlank()
     }
 
     fun sendComplaint(context: Context) {
         val db = Firebase.firestore
         val uId = Firebase.auth.currentUser?.uid
 
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val name = uId?.let {
-                Firebase.firestore
-                    .collection("users").document(it)
-                    .get().await()
-                    .getString("name")
-            }
-
-            val complaintId = db.collection("complaints").document().id
-
-            val payload = hashMapOf(
-                "userId" to uId,
-                "complaintId" to complaintId,
-                "name" to name,
-                "title" to homeUiState.title,
-                "complaintType" to homeUiState.complaintType,
-                "description" to homeUiState.Description,
-                "status" to "pending"
-            )
-
-            db.collection("complaints").document(complaintId)
-                .set(payload)
-                .addOnSuccessListener {
-                    Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
-                    onTitleChange("")
-                    onComplaintTypeChange("")
-                    onDescriptionChange("")
+        if(!checkForms()) {
+            Toast.makeText(context, "Some of the fields are left blank", Toast.LENGTH_LONG).show()
+        } else {
+            viewModelScope.launch {
+                val name = uId?.let {
+                    Firebase.firestore
+                        .collection("users").document(it)
+                        .get().await()
+                        .getString("name")
                 }
-                .addOnFailureListener {(Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show())}
+
+                val complaintId = db.collection("complaints").document().id
+
+                val payload = hashMapOf(
+                    "userId" to uId,
+                    "complaintId" to complaintId,
+                    "name" to name,
+                    "title" to homeUiState.title,
+                    "complaintType" to homeUiState.complaintType,
+                    "description" to homeUiState.Description,
+                    "timeStamp" to Timestamp.now(),
+                    "date" to homeUiState.date.toString(),
+                    "status" to "pending"
+                )
+
+                db.collection("complaints").document(complaintId)
+                    .set(payload)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Complaint Registered", Toast.LENGTH_LONG).show()
+                        onTitleChange("")
+                        onComplaintTypeChange("")
+                        onDescriptionChange("")
+                    }
+                    .addOnFailureListener {
+                        (Toast.makeText(
+                            context,
+                            "Something went wrong",
+                            Toast.LENGTH_LONG
+                        ).show())
+                    }
+            }
         }
 
     }
@@ -95,5 +109,6 @@ data class HomeUiState(
     val name: String = "",
     val complaintType: String = "",
     val Description: String = "",
-    val count: Int = 0
+    val count: Int = 0,
+    var date: LocalDate = LocalDate.now()
 )

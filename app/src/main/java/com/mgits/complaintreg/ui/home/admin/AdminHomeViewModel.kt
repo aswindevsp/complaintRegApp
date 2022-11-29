@@ -46,7 +46,7 @@ class AdminHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
-            delay(1500)
+            delay(1000)
             _isLoading.value = false
         }
     }
