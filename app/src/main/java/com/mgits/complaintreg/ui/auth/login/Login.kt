@@ -201,6 +201,16 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         loginViewModel?.loginUser(context)
+                        if (loginUiState != null) {
+                            if(loginUiState.isSuccessLogin){
+                                loginViewModel.isAdmin()
+
+                                if (loginViewModel.isAdminVal)
+                                    onNavToAdminPage.invoke()
+                                else
+                                    onNavToHomePage.invoke()
+                            }
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -234,12 +244,6 @@ fun LoginScreen(
                 color = MaterialTheme.colors.primary
             )
         }
-
-        if (loginUiState?.isLoading == true){
-            CircularProgressIndicator()
-        }
-
-
     }
 
 }
