@@ -43,30 +43,28 @@ fun LoginScreen(
     val context = LocalContext.current
 
 
-    var password by remember { mutableStateOf("") }
-
     // Creating a variable to store toggle state
     var passwordVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = loginViewModel?.hasUser){
-        if (loginViewModel?.hasUser == true){
-            val test = Firebase.auth.currentUser?.uid
-            val db = Firebase.firestore
 
-            if (test != null) {
-                db.collection("users").document(test)
-                    .get()
-                    .addOnSuccessListener { idk->
-                        if(idk.getBoolean("admin") == true)
-                            onNavToAdminPage.invoke()
-                        else
-                            onNavToHomePage.invoke()
-                    }
-            }
+    if(loginViewModel?.hasUser == true) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            LoadingAnimation()
+            loginViewModel.isAdmin()
 
+            if (loginViewModel.isAdminVal)
+                onNavToAdminPage.invoke()
+            else
+                onNavToHomePage.invoke()
         }
     }
-
+    else
     Column(
         modifier = Modifier
             .background(MaterialTheme.colors.background)

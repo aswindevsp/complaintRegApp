@@ -14,19 +14,36 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val repository: AuthRepository = AuthRepository(),
 ) : ViewModel() {
-    val currentUser = repository.currentUser
+
+
 
     val hasUser: Boolean
         get() = repository.hasUser()
 
+    var isAdminVal: Boolean = false;
+
+    fun isAdmin() {
+        viewModelScope.launch {
+            repository.isAdmin {
+                isAdminVal = it;
+            }
+            delay(10000)
+        }
+
+    }
 
     var loginUiState by mutableStateOf(LoginUiState())
         private set
+
+
 
 
     //For login
@@ -53,76 +70,6 @@ class LoginViewModel(
         loginUiState.emailSignUp.isNotBlank() &&
                 loginUiState.passwordSignUp.isNotBlank()
 
-
-    fun createUser(context: Context, navController: NavController) = viewModelScope.launch {
-        try {
-            if (!validateSignupForm()) {
-                throw IllegalArgumentException("email and password can not be empty")
-            }
-            loginUiState = loginUiState.copy(isLoading = true)
-            if (loginUiState.passwordSignUp !=
-                loginUiState.confirmPasswordSignUp
-            ) {
-                throw IllegalArgumentException(
-                    "Password do not match"
-                )
-            }
-            loginUiState = loginUiState.copy(signUpError = null)
-            repository.createUser(
-                loginUiState.emailSignUp,
-                loginUiState.passwordSignUp
-            ) { isSuccessful ->
-                loginUiState = if (isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "success Register",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    val db = Firebase.firestore
-                    val uId = Firebase.auth.currentUser?.uid
-
-                    val payload = hashMapOf(
-                        "department" to loginUiState.departmentSignUp,
-                        "email" to loginUiState.emailSignUp,
-                        "name" to loginUiState.nameSignUp,
-                        "admin" to false
-                    )
-
-                    if (uId != null) {
-                        db.collection("users").document(uId)
-                            .set(payload)
-                            .addOnSuccessListener {
-                                Toast.makeText(context, "It worked? Wah", Toast.LENGTH_LONG).show()
-                                Log.d(TAG, "It should have worked")
-                                navController.navigate("login")
-
-                            }
-                            .addOnFailureListener {(
-                                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show())
-                            }
-                    }
-                    loginUiState.copy(isSuccessLogin = true)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Failed Register",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    loginUiState.copy(isSuccessLogin = false)
-                }
-
-            }
-
-
-        } catch (e: Exception) {
-            loginUiState = loginUiState.copy(signUpError = e.localizedMessage)
-            e.printStackTrace()
-        } finally {
-            loginUiState = loginUiState.copy(isLoading = false)
-        }
-
-
-    }
 
     fun loginUser(context: Context) = viewModelScope.launch {
         try {
@@ -195,8 +142,9 @@ class LoginViewModel(
             loginUiState = loginUiState.copy(isLoading = false)
         }
 
-
     }
+
+
 
 
 
