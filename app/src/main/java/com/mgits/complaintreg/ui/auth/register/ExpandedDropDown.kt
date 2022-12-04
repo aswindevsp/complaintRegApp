@@ -63,40 +63,38 @@ fun <T> ExpandedDropDown(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isError != null) {
-            OutlinedTextField(
-                readOnly = true,
-                modifier = modifier
-                    .clickable {
-                        expanded = !expanded
-                    },
-                colors = colors,
-                value = selectedOptionText,
-                isError = isError,
-                enabled = enable,
-                onValueChange = { selectedOptionText = it },
-                placeholder = {
-                    Text(text = placeholder)
+        OutlinedTextField(
+            readOnly = true,
+            modifier = modifier
+                .clickable {
+                    expanded = !expanded
                 },
-                trailingIcon = {
-                    IconToggleButton(
-                        checked = expanded,
-                        onCheckedChange = {
-                            expanded = it
-                        }
-                    ) {
-                        if (expanded) Icon(
-                            imageVector = openedIcon,
-                            contentDescription = null
-                        ) else Icon(
-                            imageVector = closedIcon,
-                            contentDescription = null
-                        )
+            colors = colors,
+            value = selectedOptionText,
+            isError = isError,
+            enabled = enable,
+            onValueChange = { selectedOptionText = it },
+            placeholder = {
+                Text(text = placeholder)
+            },
+            trailingIcon = {
+                IconToggleButton(
+                    checked = expanded,
+                    onCheckedChange = {
+                        expanded = it
                     }
-                },
-                shape = RoundedCornerShape(parentTextFieldCornerRadius)
-            )
-        }
+                ) {
+                    if (expanded) Icon(
+                        imageVector = openedIcon,
+                        contentDescription = null
+                    ) else Icon(
+                        imageVector = closedIcon,
+                        contentDescription = null
+                    )
+                }
+            },
+            shape = RoundedCornerShape(parentTextFieldCornerRadius)
+        )
         if (expanded) {
             DropdownMenu(
                 modifier = Modifier
