@@ -46,23 +46,30 @@ fun LoginScreen(
     // Creating a variable to store toggle state
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val loadingState = loginViewModel?.isLoadingg?.collectAsState()
 
     if(loginViewModel?.hasUser == true) {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            LoadingAnimation()
-            loginViewModel.isAdmin()
-
-            if (loginViewModel.isAdminVal)
-                onNavToAdminPage.invoke()
-            else
-                onNavToHomePage.invoke()
+        loginViewModel.isAdmin()
+        if (loadingState != null) {
+            if(loadingState.value) {
+                if (loginViewModel.isAdminVal)
+                    onNavToAdminPage.invoke()
+                else
+                    onNavToHomePage.invoke()
+            } else {
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.background)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    LoadingAnimation()
+                }
+            }
         }
+
+
     }
     else
     Column(

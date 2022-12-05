@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -25,17 +26,24 @@ class LoginViewModel(
 
 
 
+    private val _isLoadingg = MutableStateFlow(false)
+    var isLoadingg : StateFlow<Boolean> = _isLoadingg
+
+
+
+
     val hasUser: Boolean
         get() = repository.hasUser()
 
-    var isAdminVal: Boolean = false;
+    var isAdminVal: Boolean = false
 
     fun isAdmin() {
         viewModelScope.launch {
             repository.isAdmin {
                 isAdminVal = it;
             }
-            delay(10000)
+            delay(1200)
+            onPress()
         }
 
     }
@@ -43,6 +51,9 @@ class LoginViewModel(
     var loginUiState by mutableStateOf(LoginUiState())
         private set
 
+    fun onPress() {
+        _isLoadingg.value = !_isLoadingg.value
+    }
 
 
 
@@ -65,10 +76,6 @@ class LoginViewModel(
     private fun validateLoginForm() =
         loginUiState.email.isNotBlank() &&
                 loginUiState.password.isNotBlank()
-
-    private fun validateSignupForm() =
-        loginUiState.emailSignUp.isNotBlank() &&
-                loginUiState.passwordSignUp.isNotBlank()
 
 
     fun loginUser(context: Context) = viewModelScope.launch {

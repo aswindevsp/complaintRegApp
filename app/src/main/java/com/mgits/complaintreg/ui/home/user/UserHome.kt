@@ -19,7 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.R
+import com.mgits.complaintreg.navigation.ROUTE_LOGIN
 import com.mgits.complaintreg.ui.auth.register.ExpandedDropDown
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -58,6 +61,10 @@ fun UserHome(
             contentDescription ="",
             modifier = Modifier
                 .size(30.dp)
+                .clickable {
+                    Firebase.auth.signOut();
+                    navController.navigate(ROUTE_LOGIN)
+                }
         )
     }
     Row(
