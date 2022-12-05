@@ -14,9 +14,6 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-
 
 class UserHomeViewModel(): ViewModel() {
 

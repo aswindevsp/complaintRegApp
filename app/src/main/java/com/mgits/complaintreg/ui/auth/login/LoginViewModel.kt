@@ -1,23 +1,16 @@
 package com.mgits.complaintreg.ui.auth.login
 
 import android.content.Context
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.repository.AuthRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -25,22 +18,19 @@ class LoginViewModel(
 ) : ViewModel() {
 
 
-
-    private val _isLoadingg = MutableStateFlow(false)
-    var isLoadingg : StateFlow<Boolean> = _isLoadingg
-
-
-
-
-    val hasUser: Boolean
-        get() = repository.hasUser()
-
     var isAdminVal: Boolean = false
+
+    private val _isLoading = MutableStateFlow(false)
+    var isLoading : StateFlow<Boolean> = _isLoading
+
+    private fun onPress() {
+        _isLoading.value = !_isLoading.value
+    }
 
     fun isAdmin() {
         viewModelScope.launch {
             repository.isAdmin {
-                isAdminVal = it;
+                isAdminVal = it
             }
             delay(1200)
             onPress()
@@ -48,12 +38,14 @@ class LoginViewModel(
 
     }
 
+
+    val hasUser: Boolean
+        get() = repository.hasUser()
+
+
+
     var loginUiState by mutableStateOf(LoginUiState())
         private set
-
-    fun onPress() {
-        _isLoadingg.value = !_isLoadingg.value
-    }
 
 
 

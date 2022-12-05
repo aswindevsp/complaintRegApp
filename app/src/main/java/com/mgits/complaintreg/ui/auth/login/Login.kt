@@ -39,14 +39,13 @@ fun LoginScreen(
 ) {
 
     val loginUiState = loginViewModel?.loginUiState
-    val isError = loginUiState?.loginError != null
     val context = LocalContext.current
 
 
     // Creating a variable to store toggle state
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val loadingState = loginViewModel?.isLoadingg?.collectAsState()
+    val loadingState = loginViewModel?.isLoading?.collectAsState()
 
     if(loginViewModel?.hasUser == true) {
         loginViewModel.isAdmin()
