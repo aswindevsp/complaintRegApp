@@ -1,6 +1,7 @@
 package com.mgits.complaintreg.ui.home.admin
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
+import com.mgits.complaintreg.ui.auth.login.LoadingAnimation
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -37,19 +39,36 @@ fun AdminHome(
         viewModel.getComplaints()
     }
 
-    complaints?.let {
-        Box(Modifier.pullRefresh(swipeRefreshState)) {
-            LazyColumn {
-                items(
-                    items = complaints
-                ) { complaints ->
-                    ComplaintCard(complaints = complaints, navController, viewModel)
+    if(viewModel.isDataLoaded.value) {
+        Column(
+            modifier = Modifier
+                .pullRefresh(swipeRefreshState)
+        ) {
+
+
+            Text(text = "yolo" + viewModel.num.value)
+
+            complaints?.let {
+                Box() {
+                    LazyColumn {
+                        items(
+                            items = complaints
+                        ) { complaints ->
+                            ComplaintCard(complaints = complaints, navController, viewModel)
+                        }
+                    }
+                    PullRefreshIndicator(
+                        refreshing = isLoading,
+                        state = swipeRefreshState,
+                        Modifier.align(Alignment.TopCenter)
+                    )
                 }
             }
-            PullRefreshIndicator(refreshing = isLoading, state = swipeRefreshState, Modifier.align(Alignment.TopCenter))
         }
     }
-    
+    else {
+        LoadingAnimation()
+    }
 
 
     val e = dataOrException.e

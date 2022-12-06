@@ -3,6 +3,8 @@ package com.mgits.complaintreg
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import android.util.Size
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
@@ -60,6 +63,17 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyContent(
 ) {
-
+    val db = Firebase.firestore
+    val collection = db.collection("complaints")
+    val query = collection.whereEqualTo("complaintType", "Electrical")
+    val countQuery = query.count()
+    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            val snapshot = task.result
+            Log.d(TAG, "Count: ${snapshot.count}")
+        } else {
+            Log.d(TAG, "Count failed: ", task.exception)
+        }
+    }
 }
 

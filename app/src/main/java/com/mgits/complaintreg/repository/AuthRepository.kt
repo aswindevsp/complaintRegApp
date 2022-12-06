@@ -18,6 +18,7 @@ class AuthRepository {
 
     fun getUserId():String = Firebase.auth.currentUser?.uid.orEmpty()
 
+
     suspend fun createUser(
         email:String,
         password:String,
