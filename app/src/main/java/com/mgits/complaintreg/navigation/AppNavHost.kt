@@ -17,7 +17,7 @@ import com.mgits.complaintreg.ui.home.admin.AdminHome
 import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
 import com.mgits.complaintreg.ui.home.user.UserHomeViewModel
 import com.mgits.complaintreg.ui.home.admin.details.DetailedView
-
+import com.mgits.complaintreg.ui.home.admin.loading.AdminLoadingScreen
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -63,6 +63,10 @@ fun AppNavHost(
 
         composable(ROUTE_ADMIN_DET) {
             DetailedView(adminHomeViewModel)
+        }
+
+        composable(ROUTE_ADMIN_LOADING) {
+            AdminLoadingScreen(adminHomeViewModel, navController)
         }
 
     }
