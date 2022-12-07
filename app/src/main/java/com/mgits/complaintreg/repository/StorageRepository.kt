@@ -2,17 +2,16 @@ package com.mgits.complaintreg.repository
 
 
 
-import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.data.Complaints
-
 import com.mgits.complaintreg.data.DataOrException
-
+import com.mgits.complaintreg.data.UserDetails
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,15 +20,25 @@ import javax.inject.Singleton
 class StorageRepository @Inject constructor(
     private val queryProductsByName: Query
 ) {
-    suspend fun getComplaintsFromSever(): DataOrException<List<Complaints>, Exception> {
-        val userId = Firebase.auth.currentUser?.uid
-        val adminType = Firebase.firestore.collection("users").document(userId.toString())
+
+    private val db = Firebase.firestore
+    private val auth = Firebase.auth
+    private val userId = auth.currentUser?.uid
+
+    private suspend fun getAdminType(): String? {
+
+        return db.collection("users").document(userId.toString())
             .get()
             .await()
             .getString("adminType")
+    }
+
+    suspend fun getComplaintsFromSever(): DataOrException<List<Complaints>, Exception> {
+
+        val adminType = getAdminType()
         val dataOrException = DataOrException<List<Complaints>, Exception>()
         try {
-            dataOrException.data = Firebase.firestore.collection("complaints").whereEqualTo("complaintType", adminType).get().await().map {
+            dataOrException.data = db.collection("complaints").whereEqualTo("complaintType", adminType).get().await().map {
                 it.toObject(Complaints::class.java)
             }
         } catch (e: FirebaseFirestoreException) {
@@ -39,4 +48,49 @@ class StorageRepository @Inject constructor(
         return dataOrException
     }
 
+    suspend fun getUserDetails():DataOrException<UserDetails, Exception> {
+        val userDetails = DataOrException<UserDetails, Exception>()
+        try{
+            userDetails.data = userId?.let { db.collection("users").document(it).get().await().toObject(UserDetails::class.java) }!!
+        } catch (_: FirebaseFirestoreException) {
+
+        }
+        Log.d("TAG", "User details: $userDetails")
+        return userDetails
+    }
+
+
+    suspend fun getUnResolvedCount(): String? {
+        val adminType = getAdminType()
+        var count: String = ""
+
+        try{
+            count = db.collection("complaints")
+                .whereEqualTo("complaintType", adminType)
+                .whereEqualTo("status", "unresolved")
+                .count()
+                .get(AggregateSource.SERVER)
+                .await()
+                .count
+                .toString()
+        } catch (_: Exception) { }
+        return count
+    }
+
+    suspend fun getResolvedCount(): String? {
+        val adminType = getAdminType()
+        var count: String = ""
+
+        try{
+            count = db.collection("complaints")
+                .whereEqualTo("complaintType", adminType)
+                .whereEqualTo("status", "resolved")
+                .count()
+                .get(AggregateSource.SERVER)
+                .await()
+                .count
+                .toString()
+        } catch (_: Exception) { }
+        return count
+    }
 }

@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Timestamp
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
+import com.mgits.complaintreg.data.UserDetails
 import com.mgits.complaintreg.repository.StorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,17 +19,11 @@ import javax.inject.Inject
 class AdminHomeViewModel @Inject constructor(
     private  val repository: StorageRepository
 ): ViewModel() {
-
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true)
     var isLoading = _isLoading.asStateFlow()
 
-    var cmpId: String = ""
 
     var tempCompDetails: Complaints = Complaints("", "", "", "", "", "", "", )
-
-    fun updateCmpId(id: Complaints) {
-        tempCompDetails = id
-    }
 
     val data: MutableState<DataOrException<List<Complaints>, Exception>> = mutableStateOf(
         DataOrException(
@@ -38,24 +32,54 @@ class AdminHomeViewModel @Inject constructor(
         )
     )
 
-    init {
-        getComplaints()
+    var userDetails: MutableState<DataOrException<UserDetails, Exception>> = mutableStateOf(
+        DataOrException()
+    )
+
+    val unresolvedCount: MutableState<String> =  mutableStateOf("")
+    val resolvedCount: MutableState<String> =  mutableStateOf("")
+
+
+
+
+    fun updateCmpId(id: Complaints) {
+        tempCompDetails = id
     }
 
-    fun getComplaints() {
+
+    init {
+        getUnresolvedCount()
+        getComplaints()
+        //getUserDetails()
+        getResolvedCount()
+
+    }
+
+    private fun getResolvedCount() {
         viewModelScope.launch {
-            _isLoading.value = true
-            data.value = repository.getComplaintsFromSever()
-            delay(1000)
+            resolvedCount.value = repository.getResolvedCount().toString()
+        }
+    }
+    private fun getUnresolvedCount() {
+        viewModelScope.launch {
+            unresolvedCount.value = repository.getUnResolvedCount().toString()
             _isLoading.value = false
         }
     }
 
+    fun getComplaints() {
+        viewModelScope.launch {
+            data.value = repository.getComplaintsFromSever()
+            delay(1000)
+        }
+    }
 
-
-
-
-
-
+//
+//    private fun getUserDetails() {
+//        viewModelScope.launch{
+//           userDetails.value = repository.getUserDetails()
+//        }
+//
+//    }
 
 }

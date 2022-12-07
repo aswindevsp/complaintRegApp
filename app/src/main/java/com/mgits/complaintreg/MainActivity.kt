@@ -1,37 +1,25 @@
 package com.mgits.complaintreg
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.util.Size
-import android.widget.Toast
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.firebase.auth.ktx.auth
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.kanyidev.searchable_dropdown.SearchableExpandedDropDownMenu
-
 import com.mgits.complaintreg.navigation.AppNavHost
-import com.mgits.complaintreg.ui.auth.register.ExpandedDropDown
-import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
-import com.mgits.complaintreg.ui.auth.register.RegistrationFormEvent
+
+import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
+import com.mgits.complaintreg.ui.home.admin.loading.AdminLoadingScreen
 import com.mgits.complaintreg.ui.theme.ComplaintRegAppTheme
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
    AppNavHost()
 //                MyContent();
+//                AdminLoadingScreen(viewModel = adminHomeViewModel, navController = navController)
             }
         }
     }
@@ -60,6 +49,17 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyContent(
 ) {
-
+    val db = Firebase.firestore
+    val collection = db.collection("complaints")
+    val query = collection.whereEqualTo("complaintType", "Electrical")
+    val countQuery = query.count()
+    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            val snapshot = task.result
+            Log.d(TAG, "Count: ${snapshot.count}")
+        } else {
+            Log.d(TAG, "Count failed: ", task.exception)
+        }
+    }
 }
 
