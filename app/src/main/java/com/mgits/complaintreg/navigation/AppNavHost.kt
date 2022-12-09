@@ -12,6 +12,7 @@ import com.mgits.complaintreg.ui.auth.login.LoginScreen
 import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 import com.mgits.complaintreg.ui.auth.register.Register
 import com.mgits.complaintreg.ui.auth.register.RegisterViewModel
+import com.mgits.complaintreg.ui.auth.reset_password.ResetPassword
 import com.mgits.complaintreg.ui.home.user.UserHome
 import com.mgits.complaintreg.ui.home.admin.AdminHome
 import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
@@ -40,13 +41,13 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         composable(ROUTE_LOGIN) {
-            LoginScreen(
+            LoginScreen(navController,
                 onNavToSignUpPage = {navController.navigate("register")},
                 onNavToHomePage = { navController.navigate("user-home"){
                             popUpTo(ROUTE_LOGIN) { inclusive = true } } },
                 onNavToAdminPage = {navController.navigate("admin-home"){
                     popUpTo(ROUTE_LOGIN) { inclusive = true } } },
-                loginViewModel = loginViewModel
+                loginViewModel = loginViewModel,
             )
         }
         composable(ROUTE_USER_HOME) {
@@ -62,11 +63,15 @@ fun AppNavHost(
         }
 
         composable(ROUTE_ADMIN_DET) {
-            DetailedView(adminHomeViewModel)
+            DetailedView(navController, adminHomeViewModel)
         }
 
         composable(ROUTE_ADMIN_LOADING) {
             AdminLoadingScreen(adminHomeViewModel, navController)
+        }
+
+        composable(ROUTE_RESET_PASSWORD) {
+            ResetPassword(loginViewModel, navController)
         }
 
     }

@@ -23,7 +23,6 @@ fun ComplaintCard(
     complaints: Complaints, navController: NavController, viewModel: AdminHomeViewModel
 ) {
 
-    val context = LocalContext.current
     Card(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier

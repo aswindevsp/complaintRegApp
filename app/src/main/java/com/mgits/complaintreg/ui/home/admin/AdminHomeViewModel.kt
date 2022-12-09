@@ -22,7 +22,7 @@ class AdminHomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     var isLoading = _isLoading.asStateFlow()
 
-
+    var sortState: String = "unresolved"
     var tempCompDetails: Complaints = Complaints("", "", "", "", "", "", "", )
 
     val data: MutableState<DataOrException<List<Complaints>, Exception>> = mutableStateOf(
@@ -69,8 +69,10 @@ class AdminHomeViewModel @Inject constructor(
 
     fun getComplaints() {
         viewModelScope.launch {
+            _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
             delay(1000)
+            _isLoading.value = false
         }
     }
 

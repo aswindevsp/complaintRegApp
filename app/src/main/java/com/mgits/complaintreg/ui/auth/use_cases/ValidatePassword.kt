@@ -1,8 +1,5 @@
 package com.mgits.complaintreg.ui.auth.use_cases
 
-import android.util.Patterns
-import java.util.regex.Pattern
-
 class ValidatePassword {
 
     fun execute(password: String): ValidationResult {

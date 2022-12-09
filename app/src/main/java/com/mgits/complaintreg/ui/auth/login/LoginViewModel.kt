@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class LoginViewModel(
     private val repository: AuthRepository = AuthRepository(),
@@ -111,34 +112,39 @@ class LoginViewModel(
     }
 
     fun resetPassword(context: Context) = viewModelScope.launch {
-        try {
-            repository.resetPassword(
-                loginUiState.email
-            ) { isSuccessful ->
-                loginUiState = if (isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        "Reset email send",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    loginUiState.copy(isSuccessLogin = false)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Hmm this shouldn't have happened",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    loginUiState.copy(isSuccessLogin = false)
+        if(loginUiState.email.isNotBlank()) {
+            try {
+                repository.resetPassword(
+                    loginUiState.email
+                ) { isSuccessful ->
+                    loginUiState = if (isSuccessful) {
+                        Toast.makeText(
+                            context,
+                            "Reset email send",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onEmailChange("")
+                        loginUiState.copy(isSuccessLogin = false)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Hmm this shouldn't have happened",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        loginUiState.copy(isSuccessLogin = false)
+                    }
+
                 }
 
+
+            } catch (e: Exception) {
+                loginUiState = loginUiState.copy(loginError = e.localizedMessage)
+                e.printStackTrace()
+            } finally {
+                loginUiState = loginUiState.copy(isLoading = false)
             }
-
-
-        } catch (e: Exception) {
-            loginUiState = loginUiState.copy(loginError = e.localizedMessage)
-            e.printStackTrace()
-        } finally {
-            loginUiState = loginUiState.copy(isLoading = false)
+        } else {
+            Toast.makeText(context, "Email invalid", Toast.LENGTH_SHORT)
         }
 
     }

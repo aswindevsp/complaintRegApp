@@ -23,15 +23,18 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.R
+import com.mgits.complaintreg.navigation.ROUTE_RESET_PASSWORD
 import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     loginViewModel: LoginViewModel? = null,
     onNavToHomePage:() -> Unit,
     onNavToAdminPage:() -> Unit,
@@ -201,7 +204,7 @@ fun LoginScreen(
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier
-                            .clickable { loginViewModel?.resetPassword(context) }
+                            .clickable { navController.navigate(ROUTE_RESET_PASSWORD) }
                     )
                 }
                 Button(
