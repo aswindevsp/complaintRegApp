@@ -58,7 +58,7 @@ fun AdminHome(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(title = {
-                              Text(text = "Pending")
+                              Text(text = "Pending: " + viewModel.unresolvedCount.value)
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier
