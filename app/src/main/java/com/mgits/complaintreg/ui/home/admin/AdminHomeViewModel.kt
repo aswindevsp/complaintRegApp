@@ -39,6 +39,8 @@ class AdminHomeViewModel @Inject constructor(
     val unresolvedCount: MutableState<String> =  mutableStateOf("")
     val resolvedCount: MutableState<String> =  mutableStateOf("")
 
+    val status: MutableState<String?> = mutableStateOf(tempCompDetails.status)
+
 
 
 
@@ -75,6 +77,19 @@ class AdminHomeViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
+
+    fun updateStatus(status: String) {
+        viewModelScope.launch {
+            tempCompDetails.status?.let { tempCompDetails.complaintId?.let { it1 ->
+                repository.updateStatus(it,
+                    it1
+                )
+            }
+            }
+            tempCompDetails.status = tempCompDetails.complaintId?.let { repository.getStatus(it) }
+        }
+    }
+
 
 //
 //    private fun getUserDetails() {

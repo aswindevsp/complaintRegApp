@@ -72,7 +72,7 @@ class UserHomeViewModel(): ViewModel() {
                     "description" to homeUiState.Description,
                     "timeStamp" to Timestamp.now(),
                     "date" to homeUiState.date.toString(),
-                    "status" to "pending"
+                    "status" to "unresolved"
                 )
 
                 db.collection("complaints").document(complaintId)
