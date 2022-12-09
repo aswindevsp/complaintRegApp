@@ -37,7 +37,6 @@ fun DetailedView(
     ){
         Icon(imageVector = Icons.Default.Menu, contentDescription = "",
             modifier= Modifier
-                .size(56.dp)
                 .padding(
                     vertical = 10.dp,
                     horizontal = 0.dp
@@ -55,7 +54,6 @@ fun DetailedView(
         Icon(
             imageVector = Icons.Default.ArrowBack, contentDescription = "",
             modifier = Modifier
-                .size(56.dp)
                 .clickable {
                     navController.popBackStack()
                 }
