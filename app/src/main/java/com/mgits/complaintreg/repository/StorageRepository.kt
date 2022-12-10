@@ -93,4 +93,29 @@ class StorageRepository @Inject constructor(
         } catch (_: Exception) { }
         return count
     }
+
+
+    suspend fun updateStatus(status: String, cmpId: String) {
+        val db = Firebase.firestore.collection("complaints").document(cmpId)
+
+        try {
+            db.update("status", status)
+        } catch (_:Exception){
+
+        }
+    }
+
+    suspend fun getStatus(cmpId: String): String? {
+        var status: String =""
+        val db = Firebase.firestore.collection("complaints").document(cmpId)
+
+        try {
+            status = db.get().await().getString("status").toString()
+        } catch (_:Exception){
+
+        }
+        return status
+    }
+
+
 }

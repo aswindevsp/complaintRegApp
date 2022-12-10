@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,10 +58,9 @@ fun UserHome(
             .fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id= R.drawable.question),
+            imageVector = Icons.Default.QuestionMark,
             contentDescription ="",
             modifier = Modifier
-                .size(30.dp)
                 .clickable {
                     Firebase.auth.signOut();
                     navController.navigate(ROUTE_LOGIN)

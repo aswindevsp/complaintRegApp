@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 class RegisterViewModel(
     private val repository: AuthRepository = AuthRepository(),
     private val validateName: ValidateName = ValidateName(),
+    private val validatePhone: ValidatePhone = ValidatePhone(),
     private val validateEmail: ValidateEmail = ValidateEmail(), //Change this to dependency injection in future
     private val validatePassword: ValidatePassword = ValidatePassword(),
     private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
@@ -51,6 +52,9 @@ class RegisterViewModel(
             is RegistrationFormEvent.DepartmentChanged -> {
                 state = state.copy(department = event.department)
             }
+            is RegistrationFormEvent.PhoneNoChanged -> {
+                state = state.copy(phoneNo = event.phoneNo)
+            }
             is RegistrationFormEvent.Submit -> {
                 submitData(navController, context)
             }
@@ -61,6 +65,7 @@ class RegisterViewModel(
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)
         val passwordResult = validatePassword.execute(state.password)
+        val phoneNoResult = validatePhone.execute(state.phoneNo)
         val repeatedPasswordResult = validateRepeatedPassword.execute(
             state.password, state.repeatedPassword
         )
@@ -71,7 +76,8 @@ class RegisterViewModel(
             emailResult,
             passwordResult,
             repeatedPasswordResult,
-            departmentResult
+            departmentResult,
+            phoneNoResult
         ).any { !it.successful }
 
         if (hasError) {
@@ -80,7 +86,8 @@ class RegisterViewModel(
                 emailError = emailResult.errorMessage,
                 passwordError = passwordResult.errorMessage,
                 repeatedPasswordError = repeatedPasswordResult.errorMessage,
-                departmentError = departmentResult.errorMessage
+                departmentError = departmentResult.errorMessage,
+                phoneNoError = phoneNoResult.errorMessage
             )
             return
         }
@@ -99,7 +106,8 @@ class RegisterViewModel(
                        "department" to state.department,
                        "email" to state.email,
                        "name" to state.name,
-                       "admin" to false
+                       "admin" to false,
+                       "phoneNo" to state.phoneNo,
                    )
 
                    if (uId != null) {

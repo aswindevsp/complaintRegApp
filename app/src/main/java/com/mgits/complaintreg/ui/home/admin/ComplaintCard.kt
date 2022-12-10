@@ -23,7 +23,6 @@ fun ComplaintCard(
     complaints: Complaints, navController: NavController, viewModel: AdminHomeViewModel
 ) {
 
-    val context = LocalContext.current
     Card(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier
@@ -46,7 +45,7 @@ fun ComplaintCard(
                 .height(100.dp)
                 .padding(all = 12.dp)
         ){
-            complaints.name?.let { title ->
+            complaints.title?.let { title ->
                 Text(
                     text = title,
                     modifier = Modifier

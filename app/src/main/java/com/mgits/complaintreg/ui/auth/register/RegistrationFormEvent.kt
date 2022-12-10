@@ -6,6 +6,7 @@ sealed class RegistrationFormEvent{
     data class PasswordChanged(val password: String) : RegistrationFormEvent()
     data class RepeatedPasswordChanged(val repeatedPassword: String) : RegistrationFormEvent()
     data class DepartmentChanged(val department: String) : RegistrationFormEvent()
+    data class PhoneNoChanged(val phoneNo: String): RegistrationFormEvent()
 
     object Submit: RegistrationFormEvent()
 }

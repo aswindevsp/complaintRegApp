@@ -22,7 +22,7 @@ class AdminHomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     var isLoading = _isLoading.asStateFlow()
 
-
+    var sortState: String = "unresolved"
     var tempCompDetails: Complaints = Complaints("", "", "", "", "", "", "", )
 
     val data: MutableState<DataOrException<List<Complaints>, Exception>> = mutableStateOf(
@@ -38,6 +38,8 @@ class AdminHomeViewModel @Inject constructor(
 
     val unresolvedCount: MutableState<String> =  mutableStateOf("")
     val resolvedCount: MutableState<String> =  mutableStateOf("")
+
+    val status: MutableState<String?> = mutableStateOf(tempCompDetails.status)
 
 
 
@@ -69,10 +71,25 @@ class AdminHomeViewModel @Inject constructor(
 
     fun getComplaints() {
         viewModelScope.launch {
+            _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
             delay(1000)
+            _isLoading.value = false
         }
     }
+
+    fun updateStatus(status: String) {
+        viewModelScope.launch {
+            tempCompDetails.status?.let { tempCompDetails.complaintId?.let { it1 ->
+                repository.updateStatus(it,
+                    it1
+                )
+            }
+            }
+            tempCompDetails.status = tempCompDetails.complaintId?.let { repository.getStatus(it) }
+        }
+    }
+
 
 //
 //    private fun getUserDetails() {

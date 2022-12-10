@@ -1,10 +1,12 @@
 package com.mgits.complaintreg.ui.auth.register
 
 import android.os.Build
+import android.text.InputType
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -52,11 +54,11 @@ fun Register(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Arrow Back",
                 modifier = Modifier
-                    .clickable { (navController.navigate(ROUTE_LOGIN)) }
+                    .clickable { navController.popBackStack() }
             )
             Icon(
                 imageVector = Icons.Filled.Help,
-                contentDescription = "Arrow Back",
+                contentDescription = "Help",
                 modifier = Modifier
                     .clickable { (navController.navigate(ROUTE_LOGIN)) }
             )
@@ -88,7 +90,7 @@ fun Register(
             Text(
                 text = "Sign Up",
                 fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
+                fontSize = 30.sp,
                 modifier = Modifier
                     .height(44.dp)
 
@@ -96,7 +98,7 @@ fun Register(
             Text(
                 text = "Create an account in order to file a complaint",
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 modifier = Modifier
                     .height(34.dp)
             )
@@ -114,6 +116,7 @@ fun Register(
                     if (state != null) {
                         OutlinedTextField(
                             value = state.name,
+                            singleLine = true,
                             onValueChange = {
                                 viewModel.onEvent(
                                     RegistrationFormEvent.NameChanged(it),
@@ -126,6 +129,12 @@ fun Register(
                                 Text(
                                     text = "Name",
                                     fontSize = 15.sp,
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "emailIcon"
                                 )
                             },
                             modifier = Modifier
@@ -148,6 +157,7 @@ fun Register(
 
                     if (state != null) {
                         OutlinedTextField(
+                            singleLine = true,
                             value = state.email,
                             onValueChange = {
                                 viewModel.onEvent(
@@ -191,6 +201,7 @@ fun Register(
 
                     if (state != null) {
                         OutlinedTextField(
+                            singleLine = true,
                             value = state.password,
 
                             onValueChange = {
@@ -235,6 +246,7 @@ fun Register(
 
                     if (state != null) {
                         OutlinedTextField(
+                            singleLine = true,
                             value = state.repeatedPassword,
                             onValueChange = {
                                 viewModel.onEvent(
@@ -244,6 +256,12 @@ fun Register(
                                 )
                             },
                             isError = state.repeatedPasswordError != null,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Lock,
+                                    contentDescription = "emailIcon"
+                                )
+                            },
                             label = {
                                 Text(
                                     text = "Confirm Password",
@@ -269,6 +287,55 @@ fun Register(
                             )
                         }
                     }
+
+
+
+
+                    if (state != null) {
+                        OutlinedTextField(
+                            singleLine = true,
+                            value = state.phoneNo,
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    RegistrationFormEvent.PhoneNoChanged(it),
+                                    navController,
+                                    context
+                                )
+                            },
+                            isError = state.phoneNoError != null,
+                            label = {
+                                Text(
+                                    text = "Phone Number ",
+                                    fontSize = 15.sp,
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Phone,
+                                    contentDescription = "phoneIcon"
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp)
+                        )
+                    }
+                    if (state != null) {
+                        if (state.phoneNoError != null) {
+                            Text(
+                                text = state.phoneNoError,
+                                color = MaterialTheme.colors.error,
+                                modifier = Modifier.align(Alignment.Start),
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+
+
+
 
 
                     Divider(

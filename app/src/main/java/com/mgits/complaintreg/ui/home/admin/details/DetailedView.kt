@@ -1,5 +1,6 @@
 package com.mgits.complaintreg.ui.home.admin.details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,10 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.mgits.complaintreg.ui.home.admin.AdminHomeViewModel
 
 @Composable
 fun DetailedView(
+    navController: NavController,
     viewModel: AdminHomeViewModel
 ) {
     Row(
@@ -34,7 +37,6 @@ fun DetailedView(
     ){
         Icon(imageVector = Icons.Default.Menu, contentDescription = "",
             modifier= Modifier
-                .size(56.dp)
                 .padding(
                     vertical = 10.dp,
                     horizontal = 0.dp
@@ -52,7 +54,9 @@ fun DetailedView(
         Icon(
             imageVector = Icons.Default.ArrowBack, contentDescription = "",
             modifier = Modifier
-                .size(56.dp)
+                .clickable {
+                    navController.popBackStack()
+                }
                 .padding(
                     vertical = 10.dp,
                     horizontal = 0.dp
