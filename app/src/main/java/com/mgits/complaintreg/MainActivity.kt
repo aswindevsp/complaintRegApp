@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
             ComplaintRegAppTheme {
    AppNavHost()
+
 //LoginPage()
             }
         }
@@ -32,11 +33,4 @@ class MainActivity : ComponentActivity() {
 // to create an Outlined Text Field
 // Calling this function as content
 // in the above function
-@Composable
-fun LoginPage() {
-    val options = listOf("Option 1", "Option 2", "Option 3")
-    DropdownMenu(expanded = true, onDismissRequest = { /*TODO*/ }) {options
-
-    }
-}
 
