@@ -122,7 +122,6 @@ fun AdminHome(
 
                 ) {
                     Card(
-                        backgroundColor = Color.Yellow,
                         shape = RoundedCornerShape(2.dp),
                         modifier = Modifier
                             .width(100.dp)
