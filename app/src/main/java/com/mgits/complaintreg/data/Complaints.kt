@@ -9,7 +9,9 @@ data class Complaints(
     var description: String? = null,
     var name: String? = null,
     var status: String? = null,
-    var title: String? = null,
+    var location: String? = null,
+    var room: String? = null,
+    var floor: String? = null,
     var userId: String? = null,
 
     @ServerTimestamp
