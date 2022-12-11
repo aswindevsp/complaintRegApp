@@ -28,6 +28,7 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
+import com.mgits.complaintreg.ui.home.user.UserDrawer
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -78,7 +79,7 @@ fun AdminHome(
                     )
                 }
             },backgroundColor = materialBlue700)  },
-        drawerContent = { Text(text = "drawerContent") }
+        drawerContent = { UserDrawer(navController = navController) }
     ) {contentPadding ->
         Column() {
             complaints?.let {
