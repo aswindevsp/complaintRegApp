@@ -3,6 +3,7 @@ package com.mgits.complaintreg.ui.home.admin
 import android.content.Context
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -95,6 +96,7 @@ fun AdminHome(
                 Box(modifier = Modifier
                     .pullRefresh(swipeRefreshState)
                     .padding(contentPadding)
+                    .fillMaxSize()
                 ) {
                     LazyColumn {
                         items(
