@@ -17,7 +17,25 @@ import com.mgits.complaintreg.ui.auth.login.LoginViewModel
 @Composable
 fun ResetPassword(viewModel: LoginViewModel, navController: NavController) {
 
-
+    val context = LocalContext.current
+    val state = viewModel.loginUiState
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        OutlinedTextField(
+            value = state.email,
+            onValueChange = { viewModel.onEmailChange(it) },
+            label = { Text("Email") }
+        )
+        OutlinedButton(onClick = {
+            viewModel.resetPassword(context)
+        }) {
+            Text("Reset Password")
+        }
+    }
 }
 
 
