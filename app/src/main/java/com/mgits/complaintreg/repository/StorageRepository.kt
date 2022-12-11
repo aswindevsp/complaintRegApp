@@ -2,9 +2,11 @@ package com.mgits.complaintreg.repository
 
 
 
+import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -95,15 +97,6 @@ class StorageRepository @Inject constructor(
     }
 
 
-    suspend fun updateStatus(status: String, cmpId: String) {
-        val db = Firebase.firestore.collection("complaints").document(cmpId)
-
-        try {
-            db.update("status", status)
-        } catch (_:Exception){
-
-        }
-    }
 
     suspend fun getStatus(cmpId: String): String? {
         var status: String =""

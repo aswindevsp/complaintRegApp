@@ -23,6 +23,7 @@ fun <T> ExpandedDropDown(
     listOfItems: List<T>,
     enable: Boolean = false,
     isError: Boolean = false,
+    readOnly: Boolean = false,
     placeholder: String = "Select Option",
     openedIcon: ImageVector = Icons.Outlined.KeyboardArrowUp,
     closedIcon: ImageVector = Icons.Outlined.KeyboardArrowDown,
@@ -64,7 +65,7 @@ fun <T> ExpandedDropDown(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            readOnly = true,
+            readOnly = readOnly,
             modifier = modifier
                 .clickable {
                     expanded = !expanded

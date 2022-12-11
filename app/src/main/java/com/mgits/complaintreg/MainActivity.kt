@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.navigation.AppNavHost
 import com.mgits.complaintreg.ui.theme.ComplaintRegAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,15 +24,17 @@ class MainActivity : ComponentActivity() {
 
             ComplaintRegAppTheme {
    AppNavHost()
-
+//Test()
 //LoginPage()
             }
         }
     }
 }
+@Composable
+fun Test() {
+    Firebase.firestore
+        .collection("complaints")
+        .document("JdmwPefgcVX0MxCdNCJ9")
+        .update("status", "updated")
 
-// Creating a composable function
-// to create an Outlined Text Field
-// Calling this function as content
-// in the above function
-
+}

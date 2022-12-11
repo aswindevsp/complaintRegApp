@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Paint.Align
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,7 +30,8 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import com.mgits.complaintreg.ui.home.user.UserDrawer
+
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -80,7 +82,7 @@ fun AdminHome(
                     )
                 }
             },backgroundColor = materialBlue700)  },
-        drawerContent = { Text(text = "drawerContent") }
+        drawerContent = { UserDrawer(navController = navController) }
     ) {contentPadding ->
         Column() {
             complaints?.let {
@@ -98,6 +100,7 @@ fun AdminHome(
                 Box(modifier = Modifier
                     .pullRefresh(swipeRefreshState)
                     .padding(contentPadding)
+                    .fillMaxSize()
                 ) {
                     LazyColumn {
                         items(

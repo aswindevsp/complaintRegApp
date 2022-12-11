@@ -23,8 +23,16 @@ class UserHomeViewModel(): ViewModel() {
     var homeUiState by mutableStateOf(HomeUiState())
         private set
 
-    fun onTitleChange(title: String) {
-        homeUiState = homeUiState.copy(title = title)
+    fun onLocationChange(location: String) {
+        homeUiState = homeUiState.copy(location = location)
+    }
+
+    fun onFloorChange(floor: String) {
+        homeUiState = homeUiState.copy(floor = floor)
+    }
+
+    fun onRoomChange(room: String) {
+        homeUiState = homeUiState.copy(room = room)
     }
 
     fun onComplaintTypeChange(complaintType: String) {
@@ -38,8 +46,15 @@ class UserHomeViewModel(): ViewModel() {
         homeUiState = homeUiState.copy(date = date)
     }
 
+
+
+
     private fun checkForms(): Boolean {
-        return if(homeUiState.title.isBlank())
+        return if(homeUiState.floor.isBlank())
+            false
+        else if(homeUiState.room.isBlank())
+            false
+        else if(homeUiState.location.isBlank())
             false
         else if(homeUiState.Description.isBlank())
             false
@@ -67,7 +82,9 @@ class UserHomeViewModel(): ViewModel() {
                     "userId" to uId,
                     "complaintId" to complaintId,
                     "name" to name,
-                    "title" to homeUiState.title,
+                    "location" to homeUiState.location,
+                    "floor" to homeUiState.floor,
+                    "room" to homeUiState.room,
                     "complaintType" to homeUiState.complaintType,
                     "description" to homeUiState.Description,
                     "timeStamp" to Timestamp.now(),
@@ -79,7 +96,9 @@ class UserHomeViewModel(): ViewModel() {
                     .set(payload)
                     .addOnSuccessListener {
                         Toast.makeText(context, "Complaint Registered", Toast.LENGTH_LONG).show()
-                        onTitleChange("")
+                        onLocationChange("")
+                        onFloorChange("")
+                        onRoomChange("")
                         onComplaintTypeChange("")
                         onDescriptionChange("")
                     }
@@ -102,9 +121,12 @@ class UserHomeViewModel(): ViewModel() {
 
 
 data class HomeUiState(
-    val title: String = "",
+    val floor: String = "",
+    val room: String = "",
     val name: String = "",
     val complaintType: String = "",
+    val location: String = "",
+    val block: String = "",
     val Description: String = "",
     val count: Int = 0,
     var date: LocalDate = LocalDate.now()

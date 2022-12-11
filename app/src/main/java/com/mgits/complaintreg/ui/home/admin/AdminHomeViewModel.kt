@@ -4,6 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
 import com.mgits.complaintreg.data.UserDetails
@@ -79,15 +81,12 @@ class AdminHomeViewModel @Inject constructor(
     }
 
     fun updateStatus(status: String) {
-        viewModelScope.launch {
-            tempCompDetails.status?.let { tempCompDetails.complaintId?.let { it1 ->
-                repository.updateStatus(it,
-                    it1
-                )
-            }
-            }
-            tempCompDetails.status = tempCompDetails.complaintId?.let { repository.getStatus(it) }
-        }
+        val cmpId = tempCompDetails.complaintId?: ""
+        Firebase.firestore
+            .collection("complaints")
+            .document(cmpId)
+            .update("status", status)
+
     }
 
 
