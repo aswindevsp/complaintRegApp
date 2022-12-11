@@ -1,6 +1,7 @@
 package com.mgits.complaintreg.ui.home.admin
 
 import android.content.Context
+import android.graphics.Paint.Align
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -29,6 +31,7 @@ import androidx.navigation.NavController
 import com.mgits.complaintreg.data.Complaints
 import com.mgits.complaintreg.data.DataOrException
 import com.mgits.complaintreg.ui.home.user.UserDrawer
+
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -125,32 +128,65 @@ fun AdminHome(
 
                 ) {
                     Card(
-                        backgroundColor = Color.Yellow,
-                        shape = RoundedCornerShape(2.dp),
+                        elevation = 16.dp,
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(160.dp)
                     ) {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalAlignment= Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier
+                                .width(100.dp)
                         ) {
+                            Spacer(
+                                modifier = Modifier
+                                    .size(12.dp)
+                            )
                             Box(modifier = Modifier.fillMaxWidth()) {
-                                Text(text = "All", Modifier.clickable {
+                                Text(text = "   All", Modifier.clickable {
                                     viewModel.sortState = "default"
                                     sortedState = "default"
+                                    FontWeight.SemiBold
                                 })
                             }
+                            Spacer(
+                                modifier = Modifier
+                                .size(12.dp)
+                            )
+                            Divider()
+                            Spacer(
+                                modifier = Modifier
+                                    .size(12.dp)
+                            )
                             Box(modifier = Modifier.fillMaxWidth()) {
-                                Text(text = "Unresolved", Modifier.clickable {
+                                Text(text = "   Unresolved", Modifier.clickable {
                                     viewModel.sortState = "unresolved"
                                     sortedState = "unresolved"
+                                    FontWeight.SemiBold
                                 })
                             }
+                            Spacer(
+                                modifier = Modifier
+                                    .size(12.dp)
+                            )
+                            Divider()
+                            Spacer(
+                                modifier = Modifier
+                                    .size(12.dp)
+                            )
                             Box(modifier = Modifier.fillMaxWidth()) {
-                                Text(text = "Resolved", Modifier.clickable {
+                                Text(text = "   Resolved", Modifier.clickable {
                                     viewModel.sortState = "resolved"
                                     sortedState = "resolved"
+                                    FontWeight.SemiBold
                                 })
                             }
+                            Spacer(
+                                modifier = Modifier
+                                    .size(12.dp)
+                            )
+                            Divider()
 
                         }
                     }
