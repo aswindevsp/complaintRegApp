@@ -39,15 +39,9 @@ fun DetailedView(
     Scaffold(
         topBar = {
             TopAppBar(title = {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack, contentDescription = "",
-                    modifier = Modifier
-                        .padding(
-                            vertical = 10.dp,
-                            horizontal = 0.dp
-                        )
-                        .clickable {navController.popBackStack()}
-                )
+                IconButton(onClick = {navController.popBackStack() }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "back arrow")
+                }
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier
@@ -56,19 +50,9 @@ fun DetailedView(
                             end = 10.dp
                         )
                 ) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "",
-                        modifier= Modifier
-                            .padding(
-                                vertical = 10.dp,
-                                horizontal = 0.dp,
-                            )
-                            .clickable {
-                                Firebase.auth.signOut()
-                                navController.navigate(ROUTE_LOGIN){
-                                    popUpTo(ROUTE_LOGIN) { inclusive = true }
-                                }
-                            }
-                    )
+                    IconButton(onClick = { }) {
+                        Icon(imageVector = Icons.Default.Menu, contentDescription = "menu")
+                    }
                 }
             },backgroundColor = MaterialTheme.colors.background) }
     ) {

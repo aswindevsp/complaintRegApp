@@ -45,7 +45,7 @@ fun ComplaintCard(
                 .height(100.dp)
                 .padding(all = 12.dp)
         ){
-            complaints.title?.let { title ->
+            complaints.name?.let { title ->
                 Text(
                     text = title,
                     modifier = Modifier

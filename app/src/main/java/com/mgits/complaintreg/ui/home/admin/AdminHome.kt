@@ -72,14 +72,9 @@ fun AdminHome(
                             end = 8.dp
                         )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Sort,
-                        contentDescription = "ds",
-                        modifier =  Modifier
-                            .clickable {
-                                popupControl = !popupControl
-                            }
-                    )
+                    IconButton(onClick = {popupControl = !popupControl}) {
+                        Icon(imageVector = Icons.Default.Sort, contentDescription = "sort")
+                    }
                 }
             },backgroundColor = materialBlue700)  },
         drawerContent = { UserDrawer(navController = navController) }
