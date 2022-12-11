@@ -75,17 +75,19 @@ class AdminHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
+            getUnresolvedCount()
             delay(1000)
             _isLoading.value = false
         }
     }
 
-    fun updateStatus(status: String) {
+    fun updateStatus(status: String, resolvedBy: String) {
         val cmpId = tempCompDetails.complaintId?: ""
         Firebase.firestore
             .collection("complaints")
             .document(cmpId)
-            .update("status", status)
+            .update("status", status, "resolvedBy", resolvedBy)
+
 
     }
 
