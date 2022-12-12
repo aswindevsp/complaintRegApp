@@ -7,12 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.mgits.complaintreg.repository.AuthRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class LoginViewModel(
     private val repository: AuthRepository = AuthRepository(),
@@ -58,9 +58,26 @@ class LoginViewModel(
     fun onPasswordChange(password: String) {
         loginUiState = loginUiState.copy(password = password)
     }
-
-
-
+    fun resetPassword(email:String,context:Context) {
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            context,
+                            "Reset email send",
+                            Toast.LENGTH_SHORT
+                        ).show()// Password reset email sent
+                        // ...
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Invalid Email",
+                            Toast.LENGTH_SHORT
+                        ).show()// Error occurred, handle the error
+                        // ...
+                    }
+                }
+    }
     fun validateEmail(): Boolean {
         val domain = loginUiState.email.split("@")
         return (domain.last() != "mgits.ac.in" && domain.size > 1)
@@ -111,43 +128,7 @@ class LoginViewModel(
 
     }
 
-    fun resetPassword(context: Context) = viewModelScope.launch {
-        if(loginUiState.email.isNotBlank()) {
-            try {
-                repository.resetPassword(
-                    loginUiState.email
-                ) { isSuccessful ->
-                    loginUiState = if (isSuccessful) {
-                        Toast.makeText(
-                            context,
-                            "Reset email send",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        onEmailChange("")
-                        loginUiState.copy(isSuccessLogin = false)
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Hmm this shouldn't have happened",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        loginUiState.copy(isSuccessLogin = false)
-                    }
 
-                }
-
-
-            } catch (e: Exception) {
-                loginUiState = loginUiState.copy(loginError = e.localizedMessage)
-                e.printStackTrace()
-            } finally {
-                loginUiState = loginUiState.copy(isLoading = false)
-            }
-        } else {
-            Toast.makeText(context, "Email invalid", Toast.LENGTH_SHORT)
-        }
-
-    }
 
 
 
