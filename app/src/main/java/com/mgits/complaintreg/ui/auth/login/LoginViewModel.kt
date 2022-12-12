@@ -129,9 +129,26 @@ class LoginViewModel(
     }
 
 
-
-
-
+    fun resetPassword(email:String,context:Context) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        context,
+                        "Reset email send",
+                        Toast.LENGTH_SHORT
+                    ).show()// Password reset email sent
+                    // ...
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Invalid Email",
+                        Toast.LENGTH_SHORT
+                    ).show()// Error occurred, handle the error
+                    // ...
+                }
+            }
+    }
 
 
 }
