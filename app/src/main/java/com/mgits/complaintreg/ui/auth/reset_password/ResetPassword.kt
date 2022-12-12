@@ -27,6 +27,7 @@ fun ResetPassword(viewModel: LoginViewModel,navController:NavController) {
         value = email,
         onValueChange = { email = it },
         label = { Text("Enter your email") })
+
         Button(onClick = { viewModel.resetPassword(email,context) }) {
             Text(text = "Enter")
         }
