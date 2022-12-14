@@ -39,12 +39,27 @@ class StorageRepository @Inject constructor(
 
         val adminType = getAdminType()
         val dataOrException = DataOrException<List<Complaints>, Exception>()
-        try {
-            dataOrException.data = db.collection("complaints").whereEqualTo("complaintType", adminType).get().await().map {
-                it.toObject(Complaints::class.java)
+
+        if(adminType != "Main") {
+            try {
+                dataOrException.data =
+                    db.collection("complaints").whereEqualTo("complaintType", adminType).get()
+                        .await().map {
+                        it.toObject(Complaints::class.java)
+                    }
+            } catch (e: FirebaseFirestoreException) {
+                dataOrException.e = e
             }
-        } catch (e: FirebaseFirestoreException) {
-            dataOrException.e = e
+        } else {
+            try {
+                dataOrException.data =
+                    db.collection("complaints").get()
+                        .await().map {
+                            it.toObject(Complaints::class.java)
+                        }
+            } catch (e: FirebaseFirestoreException) {
+                dataOrException.e = e
+            }
         }
 
         return dataOrException
@@ -66,16 +81,30 @@ class StorageRepository @Inject constructor(
         val adminType = getAdminType()
         var count: String = ""
 
-        try{
-            count = db.collection("complaints")
-                .whereEqualTo("complaintType", adminType)
-                .whereEqualTo("status", "unresolved")
-                .count()
-                .get(AggregateSource.SERVER)
-                .await()
-                .count
-                .toString()
-        } catch (_: Exception) { }
+        if(adminType != "Main") {
+            try {
+                count = db.collection("complaints")
+                    .whereEqualTo("complaintType", adminType)
+                    .whereEqualTo("status", "unresolved")
+                    .count()
+                    .get(AggregateSource.SERVER)
+                    .await()
+                    .count
+                    .toString()
+            } catch (_: Exception) {
+            }
+        } else {
+            try {
+                count = db.collection("complaints")
+                    .whereEqualTo("status", "unresolved")
+                    .count()
+                    .get(AggregateSource.SERVER)
+                    .await()
+                    .count
+                    .toString()
+            } catch (_: Exception) {
+            }
+        }
         return count
     }
 

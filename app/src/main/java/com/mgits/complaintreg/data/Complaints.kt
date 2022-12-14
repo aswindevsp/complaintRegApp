@@ -14,6 +14,7 @@ data class Complaints(
     var floor: String? = null,
     var userId: String? = null,
 
+
     @ServerTimestamp
     var time: Timestamp? = null
 )
