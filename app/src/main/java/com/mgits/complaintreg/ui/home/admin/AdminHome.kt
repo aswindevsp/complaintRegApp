@@ -134,7 +134,8 @@ fun AdminHome(
                                 modifier = Modifier
                                     .size(12.dp)
                             )
-                            Box(modifier = Modifier.fillMaxWidth()) {
+                            Box(modifier = Modifier.fillMaxWidth()
+                            ) {
                                 Text(text = "   All", Modifier.clickable {
                                     viewModel.sortState = "default"
                                     sortedState = "default"

@@ -196,7 +196,7 @@ fun DetailedView(
                 style = MaterialTheme.typography.caption
             )
             Text(
-                text = viewModel.tempCompDetails.name.toString(),
+                text = viewModel.tempCompDetails.complainant.toString(),
                 fontSize = 18.sp,
                 style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Visible
@@ -245,35 +245,56 @@ fun DetailedView(
                 color = Color.Gray,
                 style = MaterialTheme.typography.caption
             )
-            OutlinedTextField(
-                value = resolvedBy,
-                onValueChange = {
-                resolvedBy = it;
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
-            )
 
-            Button(
-                onClick = {
-                    if(resolvedBy.isNotBlank()) {
-                        viewModel.updateStatus("resolved", resolvedBy)
-                        viewModel.getComplaints()
-                        navController.popBackStack()
-                        Toast.makeText(context, "Complaint marked as resolved", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Resolved By field empty", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .padding(all = 12.dp)
-                    .fillMaxWidth()
-                    .height(42.dp)
-            )
-            {
-                Text(text = "Mark as Resolved")
+
+            if(viewModel.tempCompDetails.resolvedBy == null) {
+                OutlinedTextField(
+                    value = resolvedBy,
+                    onValueChange = {
+                        resolvedBy = it;
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                )
+                Button(
+                    onClick = {
+                        if (resolvedBy.isNotBlank()) {
+                            viewModel.updateStatus("resolved", resolvedBy)
+                            viewModel.getComplaints()
+                            navController.popBackStack()
+                            Toast.makeText(
+                                context,
+                                "Complaint marked as resolved",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(context, "Resolved By field empty", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .padding(all = 12.dp)
+                        .fillMaxWidth()
+                        .height(42.dp)
+                )
+                {
+                    Text(text = "Mark as Resolved")
+                }
+            } else {
+                viewModel.tempCompDetails.resolvedBy?.let { it1 ->
+                    OutlinedTextField(
+                        value = it1,
+                        onValueChange = {
+                            resolvedBy = it;
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                        readOnly = true
+                    )
+                }
             }
         }
     }

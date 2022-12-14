@@ -4,6 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.complaintreg.data.Complaints
@@ -86,7 +88,12 @@ class AdminHomeViewModel @Inject constructor(
         Firebase.firestore
             .collection("complaints")
             .document(cmpId)
-            .update("status", status, "resolvedBy", resolvedBy)
+            .update(
+                "status", status,
+                "resolvedBy", resolvedBy,
+                "resolvedRequestID", Firebase.auth.uid,
+                "resolvedTimeStamp", Timestamp.now()
+            )
 
 
     }

@@ -81,16 +81,15 @@ class UserHomeViewModel(): ViewModel() {
                 val payload = hashMapOf(
                     "userId" to uId,
                     "complaintId" to complaintId,
-                    "name" to name,
+                    "complainant" to name,
                     "location" to homeUiState.location,
                     "floor" to homeUiState.floor,
                     "room" to homeUiState.room,
                     "complaintType" to homeUiState.complaintType,
                     "description" to homeUiState.Description,
-                    "timeStamp" to Timestamp.now(),
+                    "registeredTimeStamp" to Timestamp.now(),
                     "date" to homeUiState.date.toString(),
                     "status" to "unresolved",
-                    "resolvedBy" to ""
                 )
 
                 db.collection("complaints").document(complaintId)
