@@ -32,9 +32,5 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun Test() {
-    Firebase.firestore
-        .collection("complaints")
-        .document("JdmwPefgcVX0MxCdNCJ9")
-        .update("status", "updated")
 
 }

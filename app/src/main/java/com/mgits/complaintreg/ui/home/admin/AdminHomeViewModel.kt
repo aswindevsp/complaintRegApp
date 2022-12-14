@@ -91,7 +91,7 @@ class AdminHomeViewModel @Inject constructor(
             .update(
                 "status", status,
                 "resolvedBy", resolvedBy,
-                "resolvedRequestID", Firebase.auth.uid,
+                "resolvedByID", Firebase.auth.uid,
                 "resolvedTimeStamp", Timestamp.now()
             )
 

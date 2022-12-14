@@ -76,7 +76,7 @@ class UserHomeViewModel(): ViewModel() {
                 val complaintId = db.collection("complaints").document().id
 
                 val payload = hashMapOf(
-                    "userId" to uId,
+                    "complainantID" to uId,
                     "complaintId" to complaintId,
                     "complainant" to name,
                     "location" to homeUiState.location,
