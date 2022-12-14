@@ -48,11 +48,8 @@ class UserHomeViewModel(): ViewModel() {
 
 
 
-
     private fun checkForms(): Boolean {
         return if(homeUiState.floor.isBlank())
-            false
-        else if(homeUiState.room.isBlank())
             false
         else if(homeUiState.location.isBlank())
             false
