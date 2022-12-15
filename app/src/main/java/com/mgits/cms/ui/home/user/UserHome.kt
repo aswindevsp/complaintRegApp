@@ -156,6 +156,7 @@ fun UserHome(
                         onDropDownItemSelected = { item -> // Returns the item selected in the dropdown
                             homeViewModel?.onComplaintTypeChange(item)
                         },
+                        readOnly = true
                     )
 
                     ExpandedDropDown(
@@ -186,7 +187,7 @@ fun UserHome(
                             .fillMaxWidth(),
 
                         listOfItems = listOf(
-                            "1", "2", "3", "4", "5"
+                            "0","1", "2", "3", "4", "5"
                         ),
                         enable = true,
                         parentTextFieldCornerRadius = 5.dp,
