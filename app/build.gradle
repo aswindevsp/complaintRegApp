@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.mgits.complaintreg'
+    namespace 'com.mgits.cms'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.mgits.complaintreg"
+        applicationId "com.mgits.cms"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -79,8 +79,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
 
-    //dropdown
-    implementation 'com.github.Breens-Mbaka:Searchable-Dropdown-Menu-Jetpack-Compose:0.2.4'
 
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
