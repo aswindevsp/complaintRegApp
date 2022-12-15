@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "532547478822",
-    "project_id": "mits-complaint-management",
-    "storage_bucket": "mits-complaint-management.appspot.com"
+    "project_number": "66700712541",
+    "project_id": "mgits-cms",
+    "storage_bucket": "mgits-cms.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:532547478822:android:ddf8338018f8e54a378de7",
+        "mobilesdk_app_id": "1:66700712541:android:8e024ed968bbaca5e8cbb4",
         "android_client_info": {
           "package_name": "com.mgits.cms"
         }
       },
       "oauth_client": [
         {
-          "client_id": "532547478822-6rai60a0n9vmii4jkpopa7434vh02vju.apps.googleusercontent.com",
+          "client_id": "66700712541-f5e5btrh0f5m4kmmv62hgaaetho5nm52.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD_wkmyAo4iDYAoFRTmDlNQQZVqPWkYJRY"
+          "current_key": "AIzaSyA0o1iCg9OvEqeMVUpzgnKrbcRf8IczquA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "532547478822-6rai60a0n9vmii4jkpopa7434vh02vju.apps.googleusercontent.com",
+              "client_id": "66700712541-f5e5btrh0f5m4kmmv62hgaaetho5nm52.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
