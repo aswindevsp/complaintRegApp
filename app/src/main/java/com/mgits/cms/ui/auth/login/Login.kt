@@ -1,6 +1,7 @@
 package com.mgits.cms.ui.auth.login
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,7 +17,9 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.mgits.cms.R
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
 
 
@@ -76,25 +80,24 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-//        Box(
-//            modifier = Modifier
-//                .height(90.dp)
-//                .fillMaxWidth()
-//                .padding(
-//                    start = 64.dp,
-//                    end = 64.dp
-//                )
-//        ) {
-//            Image(
-//                painter = painterResource(id = R.drawable.mits_logo),
-//                contentDescription = "mits logo",
-//                modifier = Modifier
-//                    .padding(16.dp)
-//                    .scale(1.3f)
-//                    .fillMaxSize(),
-//                //contentScale = ContentScale.Crop
-//            )
-//        }
+        Box(
+            modifier = Modifier
+                .height(90.dp)
+                .fillMaxWidth()
+                .padding(
+                    start = 64.dp,
+                    end = 64.dp
+                )
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.mits_logo),
+                contentDescription = "mits logo",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .scale(1.3f)
+                    .fillMaxSize()
+            )
+        }
         Text(
             text = "MITS Complaint Management System",
             fontWeight = FontWeight.Bold,
