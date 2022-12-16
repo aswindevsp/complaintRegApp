@@ -69,7 +69,8 @@ fun UserHome(
                         Icon(imageVector = Icons.Default.Person, contentDescription = "profile")
                     }
                 }
-            },backgroundColor = MaterialTheme.colors.background)  }
+            },backgroundColor = MaterialTheme.colors.background)  },
+        drawerContent = {  }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
