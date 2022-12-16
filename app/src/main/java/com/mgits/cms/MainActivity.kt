@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import com.mgits.cms.navigation.AppNavHost
+import com.mgits.cms.ui.home.user.profile.Profile
 import com.mgits.cms.ui.theme.cmsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,14 +21,11 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             cmsAppTheme {
-   AppNavHost()
+//   AppNavHost()
+Profile()
 //Test()
 //LoginPage()
             }
         }
     }
-}
-@Composable
-fun Test() {
-
 }
