@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.mgits.cms.navigation.ROUTE_USER_PROFILE
 import com.mgits.cms.ui.auth.register.ExpandedDropDown
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -64,12 +65,11 @@ fun UserHome(
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigate(ROUTE_USER_PROFILE) }) {
                         Icon(imageVector = Icons.Default.Person, contentDescription = "profile")
                     }
                 }
-            },backgroundColor = MaterialTheme.colors.background)  },
-        drawerContent = { UserDrawer(navController = navController) }
+            },backgroundColor = MaterialTheme.colors.background)  }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

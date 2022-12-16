@@ -19,6 +19,8 @@ import com.mgits.cms.ui.home.admin.details.DetailedView
 import com.mgits.cms.ui.home.admin.loading.AdminLoadingScreen
 import com.mgits.cms.ui.home.user.UserHome
 import com.mgits.cms.ui.home.user.UserHomeViewModel
+import com.mgits.cms.ui.home.user.profile.Profile
+import com.mgits.cms.ui.home.user.profile.ProfileViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -30,8 +32,8 @@ fun AppNavHost(
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
-
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
+    val profileViewModel = viewModel(modelClass = ProfileViewModel::class.java)
     val dataOrException = adminHomeViewModel.data.value
 
 
@@ -44,10 +46,18 @@ fun AppNavHost(
             LoginScreen(navController,
                 onNavToSignUpPage = {navController.navigate("register")},
                 onNavToHomePage = { navController.navigate("user-home"){
-                            popUpTo(ROUTE_LOGIN) { inclusive = true } } },
+                    popUpTo(0) } },
                 onNavToAdminPage = {navController.navigate("admin-home"){
-                    popUpTo(ROUTE_LOGIN) { inclusive = true } } },
+                    popUpTo(0) } },
                 loginViewModel = loginViewModel,
+            )
+        }
+        composable(ROUTE_USER_PROFILE) {
+            Profile(
+                onNavToLoginPage = {navController.navigate(ROUTE_LOGIN){
+                    popUpTo(0)}},
+                viewModel = profileViewModel,
+                navController
             )
         }
         composable(ROUTE_USER_HOME) {
@@ -73,6 +83,8 @@ fun AppNavHost(
         composable(ROUTE_RESET_PASSWORD) {
             ResetPassword(loginViewModel, navController)
         }
+
+
 
     }
 
