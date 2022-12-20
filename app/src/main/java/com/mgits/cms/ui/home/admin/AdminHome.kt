@@ -1,7 +1,5 @@
 package com.mgits.cms.ui.home.admin
 
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +24,6 @@ import com.mgits.cms.data.DataOrException
 import com.mgits.cms.ui.home.user.UserDrawer
 
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AdminHome(
@@ -44,9 +41,6 @@ fun AdminHome(
     val swipeRefreshState = rememberPullRefreshState(refreshing = isLoading, onRefresh = viewModel::getComplaints)
 
     val complaints = dataOrException.data
-    if (complaints != null) {
-        Log.d(TAG, "asdfasdf " + complaints.size.toString())
-    }
 
     val materialBlue700= MaterialTheme.colors.background
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
