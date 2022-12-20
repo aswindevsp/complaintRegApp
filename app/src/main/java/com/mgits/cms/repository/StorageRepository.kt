@@ -23,10 +23,11 @@ class StorageRepository @Inject constructor(
 
     private val db = Firebase.firestore
     private val auth = Firebase.auth
-    private val userId = auth.currentUser?.uid
+    var userId = auth.currentUser?.uid
 
     private suspend fun getAdminType(): String? {
-
+        //updates user id if the userid is not fetched initially
+        userId = Firebase.auth.currentUser!!.uid
         return db.collection("users").document(userId.toString())
             .get()
             .await()
@@ -64,11 +65,15 @@ class StorageRepository @Inject constructor(
     }
 
     suspend fun getUserDetails():DataOrException<UserDetails, Exception> {
+        userId = Firebase.auth.currentUser?.uid
         val userDetails = DataOrException<UserDetails, Exception>()
-        try{
-            userDetails.data = userId?.let { db.collection("users").document(it).get().await().toObject(UserDetails::class.java) }!!
-        } catch (_: FirebaseFirestoreException) {
+        if (userId != null) {
+            try {
+                userDetails.data = db.collection("users").document(userId!!).get().await()
+                    .toObject(UserDetails::class.java)
+            } catch (_: FirebaseFirestoreException) {
 
+            }
         }
         Log.d("TAG", "User details: $userDetails")
         return userDetails

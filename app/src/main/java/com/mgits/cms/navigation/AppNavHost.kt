@@ -30,13 +30,12 @@ fun AppNavHost(
 ) {
     var startDestination: String = ROUTE_LOGIN
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
-    val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
     val profileViewModel = viewModel(modelClass = ProfileViewModel::class.java)
     val dataOrException = adminHomeViewModel.data.value
 
-
+    val loginViewModel = viewModel(modelClass = LoginViewModel()::class.java)
 
     NavHost(
         navController = navController,
@@ -45,9 +44,14 @@ fun AppNavHost(
         composable(ROUTE_LOGIN) {
             LoginScreen(navController,
                 onNavToSignUpPage = {navController.navigate("register")},
-                onNavToHomePage = { navController.navigate("user-home"){
+                onNavToHomePage = {
+                    profileViewModel.getUserDetails()
+                    navController.navigate("user-home"){
                     popUpTo(0) } },
                 onNavToAdminPage = {navController.navigate("admin-home"){
+                    adminHomeViewModel.getUnresolvedCount()
+                    adminHomeViewModel.getComplaints()
+                    adminHomeViewModel.getResolvedCount()
                     popUpTo(0) } },
                 loginViewModel = loginViewModel,
             )
