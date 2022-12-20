@@ -27,7 +27,7 @@ fun Profile(
 ) {
 
     val scrollState = rememberScrollState(0)
-    viewModel.getUserDetails()
+
 
     Column(
         modifier = Modifier

@@ -53,23 +53,14 @@ class AdminHomeViewModel @Inject constructor(
     }
 
 
-    init {
-        getUnresolvedCount()
-        getComplaints()
-        //getUserDetails()
-        getResolvedCount()
-
-    }
-
-    private fun getResolvedCount() {
+     fun getResolvedCount() {
         viewModelScope.launch {
             resolvedCount.value = repository.getResolvedCount().toString()
         }
     }
-    private fun getUnresolvedCount() {
+     fun getUnresolvedCount() {
         viewModelScope.launch {
             unresolvedCount.value = repository.getUnResolvedCount().toString()
-            _isLoading.value = false
         }
     }
 
@@ -78,7 +69,7 @@ class AdminHomeViewModel @Inject constructor(
             _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
             getUnresolvedCount()
-            delay(1000)
+            delay(1500)
             _isLoading.value = false
         }
     }

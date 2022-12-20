@@ -30,7 +30,10 @@ class ProfileViewModel  @Inject constructor(
         }
     }
 
+
     fun signOut() {
         Firebase.auth.signOut()
     }
+
+
 }
