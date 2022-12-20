@@ -22,13 +22,10 @@ class MainActivity : ComponentActivity() {
 
             cmsAppTheme {
    AppNavHost()
+//Profile()
 //Test()
 //LoginPage()
             }
         }
     }
-}
-@Composable
-fun Test() {
-
 }
