@@ -109,7 +109,7 @@ class LoginViewModel(
                 } else {
                     Toast.makeText(
                         context,
-                        "Login Failed",
+                        "Invalid Login Credentials",
                         Toast.LENGTH_LONG
                     ).show()
                     loginUiState.copy(isSuccessLogin = false)
@@ -122,6 +122,7 @@ class LoginViewModel(
             loginUiState = loginUiState.copy(loginError = e.localizedMessage)
             e.printStackTrace()
         } finally {
+            delay(500)
             loginUiState = loginUiState.copy(isLoading = false)
         }
 

@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -32,9 +33,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.R
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
+import com.mgits.cms.ui.home.admin.CircularProgressBar
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -141,7 +144,7 @@ fun LoginScreen(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
                     ),
-                    placeholder = { Text(text = "abc@mgits.ac.in")},
+//                    placeholder = { Text(text = "abc@mgits.ac.in")},
                     label = { Text(text = "Email")},
                 )
                 Column(
@@ -178,7 +181,6 @@ fun LoginScreen(
                         imeAction = ImeAction.Done
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    placeholder = { Text(text = "******")},
                     label = {Text(text = "Password")},
                     trailingIcon = {
                         if (loginUiState != null) {
@@ -230,6 +232,7 @@ fun LoginScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(70.dp)
                         .padding(
                             top = 16.dp,
                             start = 32.dp,
@@ -238,12 +241,23 @@ fun LoginScreen(
                     shape = RoundedCornerShape(32.dp),
 
                 ) {
-                    Text(
-                        text = "Login",
-                        fontSize = 16.sp,
-                        modifier = Modifier
-                            .padding(6.dp)
-                    )
+                    if (!loginUiState!!.isLoading) {
+                        Text(
+                            text = "Login",
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .padding(6.dp)
+                        )
+                    } else {
+                        Box(
+                            contentAlignment = Alignment.BottomCenter,
+                        ) {
+                            LoadingAnimation(
+                                circleColor = MaterialTheme.colors.background,
+                                circleSize = 15.dp
+                            )
+                        }
+                    }
                 }
             }
 
