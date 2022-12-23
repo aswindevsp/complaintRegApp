@@ -14,11 +14,14 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +34,7 @@ import com.mgits.cms.R
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -42,6 +46,7 @@ fun LoginScreen(
 
     val loginUiState = loginViewModel?.loginUiState
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     // Creating a variable to store toggle state
@@ -134,7 +139,7 @@ fun LoginScreen(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
                         keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Next
                     ),
                     placeholder = { Text(text = "abc@mgits.ac.in")},
                     label = { Text(text = "Email")},
@@ -162,7 +167,10 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "lockIcon") },
-                    keyboardActions = KeyboardActions(onDone = {loginViewModel?.loginUser(context)}),
+                    keyboardActions = KeyboardActions(onDone = {
+                        loginViewModel?.loginUser(context)
+                        keyboardController?.hide()
+                    }),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,

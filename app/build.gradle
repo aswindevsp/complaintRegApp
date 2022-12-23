@@ -69,15 +69,15 @@ dependencies {
     //Navigation
     implementation "androidx.navigation:navigation-compose:2.5.3"
 
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
+    implementation "com.google.dagger:hilt-android:2.44.2"
+    kapt "com.google.dagger:hilt-compiler:2.44.2"
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:31.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
 
 
 
