@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import androidx.navigation.NavController
 import com.mgits.cms.navigation.ROUTE_LOGIN
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun Register(
@@ -37,11 +39,11 @@ fun Register(
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)){
+            .background(MaterialTheme.colorScheme.background)){
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(horizontal = 18.dp, vertical =18.dp)
+                .padding(horizontal = 18.dp, vertical = 18.dp)
                 .fillMaxWidth(),
         ) {
             Icon(
@@ -64,7 +66,7 @@ fun Register(
 
             modifier = Modifier
                 .padding(all = 10.dp)
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             /*Box(
             modifier = Modifier
@@ -97,8 +99,8 @@ fun Register(
                     .height(34.dp)
             )
             Card(
-                elevation = 0.dp,
-                backgroundColor = MaterialTheme.colors.background
+                elevation = CardDefaults.cardElevation(0.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
@@ -141,7 +143,7 @@ fun Register(
                         if (state.nameError != null) {
                             Text(
                                 text = state.nameError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -183,7 +185,7 @@ fun Register(
                         if (state.emailError != null) {
                             Text(
                                 text = state.emailError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -231,7 +233,7 @@ fun Register(
                         if (state.passwordError != null) {
                             Text(
                                 text = state.passwordError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -275,7 +277,7 @@ fun Register(
                         if (state.repeatedPasswordError != null) {
                             Text(
                                 text = state.repeatedPasswordError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -321,7 +323,7 @@ fun Register(
                         if (state.phoneNoError != null) {
                             Text(
                                 text = state.phoneNoError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -373,7 +375,7 @@ fun Register(
                         if (state.departmentError != null) {
                             Text(
                                 text = state.departmentError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -424,7 +426,7 @@ fun Register(
                     onClick = { navController.navigate("login") },
                     style = TextStyle(
                         //fontSize = 14.sp,
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 )
             }

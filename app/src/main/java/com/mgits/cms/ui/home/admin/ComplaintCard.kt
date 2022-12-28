@@ -1,10 +1,9 @@
 package com.mgits.cms.ui.home.admin
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.navigation.NavController
 import com.mgits.cms.data.Complaints
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ComplaintCard(
     complaints: Complaints, navController: NavController, viewModel: AdminHomeViewModel
@@ -31,11 +29,11 @@ fun ComplaintCard(
                 bottom = 4.dp
             )
             .fillMaxWidth(),
-        elevation = 3.dp,
-        onClick = {
-            complaints.complaintId?.let { viewModel.updateCmpId(complaints) }
-            navController.navigate("detailed-view")
-        }
+//        elevation = 3.dp,
+//        onClick = {
+//            complaints.complaintId?.let { viewModel.updateCmpId(complaints) }
+//            navController.navigate("detailed-view")
+//        }
     ) {
         Column(
             modifier = Modifier

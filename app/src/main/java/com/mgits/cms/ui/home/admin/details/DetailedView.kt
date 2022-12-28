@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.ui.home.admin.AdminHomeViewModel
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailedView(
     navController: NavController,
@@ -53,7 +55,7 @@ fun DetailedView(
                         Icon(imageVector = Icons.Default.Menu, contentDescription = "menu")
                     }
                 }
-            },backgroundColor = MaterialTheme.colors.background) }
+            }, colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.background)) }
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -70,7 +72,7 @@ fun DetailedView(
             Text(
                 text = "Registered Complaint: ",
                 fontSize = 24.sp,
-                style = MaterialTheme.typography.h5,
+//                style = MaterialTheme.typography.h5,
                 fontWeight = FontWeight.Bold
             )
 
@@ -83,12 +85,12 @@ fun DetailedView(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
-                style = MaterialTheme.typography.caption
+//                style = MaterialTheme.typography.caption
             )
             Text(
                 text = viewModel.tempCompDetails.complaintId.toString(),
                 fontSize = 18.sp,
-                style = MaterialTheme.typography.body1,
+//                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Visible
             )
 
@@ -104,12 +106,12 @@ fun DetailedView(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
-                style = MaterialTheme.typography.caption
+//                style = MaterialTheme.typography.caption
             )
             Text(
                 text = viewModel.tempCompDetails.location.toString(),
                 fontSize = 18.sp,
-                style = MaterialTheme.typography.body1,
+//                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Visible
             )
 
@@ -127,12 +129,12 @@ fun DetailedView(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Gray,
-                        style = MaterialTheme.typography.caption
+//                        style = MaterialTheme.typography.caption
                     )
                     Text(
                         text = viewModel.tempCompDetails.floor.toString(),
                         fontSize = 18.sp,
-                        style = MaterialTheme.typography.body1,
+//                        style = MaterialTheme.typography.body1,
                         overflow = TextOverflow.Visible
                     )
                 }
@@ -146,12 +148,12 @@ fun DetailedView(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Gray,
-                        style = MaterialTheme.typography.caption
+//                        style = MaterialTheme.typography.caption
                     )
                     Text(
                         text = viewModel.tempCompDetails.room.toString(),
                         fontSize = 18.sp,
-                        style = MaterialTheme.typography.body1,
+//                        style = MaterialTheme.typography.body1,
                         overflow = TextOverflow.Visible
                     )
                 }
@@ -171,12 +173,12 @@ fun DetailedView(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
-                style = MaterialTheme.typography.caption
+//                style = MaterialTheme.typography.caption
             )
             Text(
                 text = viewModel.tempCompDetails.description.toString(),
                 fontSize = 18.sp,
-                style = MaterialTheme.typography.body1,
+//                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Visible
             )
             Divider(
@@ -190,12 +192,12 @@ fun DetailedView(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
-                style = MaterialTheme.typography.caption
+//                style = MaterialTheme.typography.caption
             )
             Text(
                 text = viewModel.tempCompDetails.complainant.toString(),
                 fontSize = 18.sp,
-                style = MaterialTheme.typography.body1,
+//                style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Visible
             )
             Divider(
@@ -240,7 +242,7 @@ fun DetailedView(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
-                style = MaterialTheme.typography.caption
+//                style = MaterialTheme.typography.caption
             )
 
 

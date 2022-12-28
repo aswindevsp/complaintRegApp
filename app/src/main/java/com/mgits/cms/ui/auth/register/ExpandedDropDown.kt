@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -17,6 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> ExpandedDropDown(
     modifier: Modifier = Modifier,
@@ -136,15 +138,14 @@ fun <T> ExpandedDropDown(
 
                     items.forEach { selectedItem ->
                         DropdownMenuItem(
+                            text = { selectedItem },
                             onClick = {
                                 selectedOptionText = selectedItem.toString()
                                 onDropDownItemSelected(selectedItem)
                                 searchedOption = ""
                                 expanded = false
                             }
-                        ) {
-                            dropdownItem(selectedItem)
-                        }
+                        )
                     }
                 }
             }

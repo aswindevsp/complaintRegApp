@@ -8,19 +8,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -33,11 +31,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.R
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
-import com.mgits.cms.ui.home.admin.CircularProgressBar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoroutinesApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -68,7 +67,7 @@ fun LoginScreen(
             } else {
                 Column(
                     modifier = Modifier
-                        .background(MaterialTheme.colors.background)
+                        .background(MaterialTheme.colorScheme.background)
                         .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -83,7 +82,7 @@ fun LoginScreen(
     else
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -124,8 +123,10 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 16.dp),
             shape = RoundedCornerShape(16.dp),
-            elevation = 0.dp,
-            backgroundColor = MaterialTheme.colors.background
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
+            elevation = CardDefaults.cardElevation(0.dp)
+            /*TODO*/
+            //elevation = 0.dp,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,8 +156,9 @@ fun LoginScreen(
                         if (loginViewModel.validateEmail()) {
                             Text(
                                 text = "Require @mgits.ac.in",
-                                color = MaterialTheme.colors.error,
-                                style = MaterialTheme.typography.caption,
+                                color = MaterialTheme.colorScheme.error,
+                                /*TODO*/
+                                //style = MaterialTheme.typography.caption,
                                 modifier = Modifier.padding(start = 16.dp)
                             )
                         }
@@ -211,7 +213,7 @@ fun LoginScreen(
                     Text(
                         text = "Forgot Password?",
                         textAlign = TextAlign.End,
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .clickable { navController.navigate(ROUTE_RESET_PASSWORD) }
                     )
@@ -253,7 +255,7 @@ fun LoginScreen(
                             contentAlignment = Alignment.BottomCenter,
                         ) {
                             LoadingAnimation(
-                                circleColor = MaterialTheme.colors.background,
+                                circleColor = MaterialTheme.colorScheme.background,
                                 circleSize = 15.dp
                             )
                         }
@@ -271,7 +273,7 @@ fun LoginScreen(
                 text = "Sign up",
                 modifier = Modifier
                     .clickable { onNavToSignUpPage.invoke() },
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

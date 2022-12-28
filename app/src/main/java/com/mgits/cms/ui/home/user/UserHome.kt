@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun UserHome(
@@ -46,16 +48,17 @@ fun UserHome(
     var c by remember {
         mutableStateOf(0)
     }
-    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+//    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+    val scaffoldState = rememberDrawerState(DrawerValue.Closed)
 
     val scope = rememberCoroutineScope()
 
 
     Scaffold(
-        scaffoldState = scaffoldState,
+//        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(title = {
-                IconButton(onClick = { scope.launch { scaffoldState.drawerState.open() } }) {
+                IconButton(onClick = { scope.launch { scaffoldState.open() } }) {
                     Icon(imageVector = Icons.Default.Menu, contentDescription = "menu")
                 }
 
@@ -69,18 +72,17 @@ fun UserHome(
                         Icon(imageVector = Icons.Default.Person, contentDescription = "profile")
                     }
                 }
-            },backgroundColor = MaterialTheme.colors.background)  },
-        drawerContent = {  }
+            })
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-
             modifier = Modifier
-                .padding(all = 10.dp)
+                .padding(it)
         ) {
             Card(
-                elevation = 0.dp
+                elevation =  CardDefaults.cardElevation(0.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
