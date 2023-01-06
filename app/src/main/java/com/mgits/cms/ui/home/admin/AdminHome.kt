@@ -20,8 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mgits.cms.data.Complaints
 import com.mgits.cms.data.DataOrException
+import com.mgits.cms.navigation.ROUTE_LOGIN
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,8 +50,6 @@ fun AdminHome(
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
-    val selectedItem = remember { mutableStateOf(items[0]) }
 
 
 
@@ -64,7 +65,7 @@ fun AdminHome(
                             end = 8.dp
                         )
                 ) {
-                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                    IconButton(onClick = { scope.launch {popupControl=!popupControl /*drawerState.open()*/ } }) {
                         Icon(imageVector = Icons.Default.Sort, contentDescription = "sort")
                     }
                 }
@@ -78,17 +79,9 @@ fun AdminHome(
                 drawerContent = {
                     ModalDrawerSheet {
                         Spacer(Modifier.height(12.dp))
-                        items.forEach { item ->
-                            NavigationDrawerItem(
-                                icon = { Icon(item, contentDescription = null) },
-                                label = { Text(item.name) },
-                                selected = item == selectedItem.value,
-                                onClick = {
-                                    scope.launch { drawerState.close() }
-                                    selectedItem.value = item
-                                },
-                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                            )
+                        Button(onClick = {Firebase.auth.signOut()
+                            navController.navigate(ROUTE_LOGIN)}) {
+                            Text(text = "Sign Out")
                         }
                     }
                 },

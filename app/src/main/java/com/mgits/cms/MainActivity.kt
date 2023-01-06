@@ -19,12 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             cmsAppTheme {
-   AppNavHost()
-//Profile()
-//Test()
-//LoginPage()
+                   AppNavHost()
             }
         }
     }
