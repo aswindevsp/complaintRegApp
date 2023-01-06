@@ -81,7 +81,7 @@ fun UserHome(
             modifier = Modifier
                 .padding(it)
         ) {
-            Card(
+            ElevatedCard(
                 elevation =  CardDefaults.cardElevation(0.dp)
             ) {
                 Column(
