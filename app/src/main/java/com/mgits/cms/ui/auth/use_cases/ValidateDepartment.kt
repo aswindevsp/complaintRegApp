@@ -3,7 +3,12 @@ package com.mgits.cms.ui.auth.use_cases
 class ValidateDepartment {
 
     fun execute(department: String): ValidationResult {
-        val departmentList = listOf<String>("CE", "ME", "ECE", "EEE", "CS-A", "CS-B", "CS(AI)", "CS(AI&DS)", "CS(Cybersecurity)")
+        val departmentList = listOf<String>( "CS",
+            "AI&DS",
+            "CE",
+            "ME",
+            "ECE",
+            "EEE")
         if(department.isBlank()) {
             return ValidationResult(
                 successful = false,
@@ -13,7 +18,7 @@ class ValidateDepartment {
         if(!departmentList.contains(department)) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "Invalid department, select department from the drop down menu"
+                errorMessage = "Please select your department"
             )
         }
 
