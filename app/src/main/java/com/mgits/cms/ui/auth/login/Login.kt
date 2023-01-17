@@ -1,6 +1,8 @@
 package com.mgits.cms.ui.auth.login
 
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +31,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mgits.cms.R
+import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -57,6 +63,10 @@ fun LoginScreen(
     val loadingState = loginViewModel?.isLoading?.collectAsState()
 
     if(loginViewModel?.hasUser == true) {
+        Log.d(TAG, Firebase.auth.currentUser!!.isEmailVerified.toString())
+        if(!Firebase.auth.currentUser!!.isEmailVerified) {
+            navController.navigate(ROUTE_EMAIL_VERIFICATION)
+        }
         loginViewModel.isAdmin()
         if (loadingState != null) {
             if(loadingState.value) {

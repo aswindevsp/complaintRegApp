@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mgits.cms.ui.auth.email_verification.EmailVerification
 import com.mgits.cms.ui.auth.login.LoginScreen
 import com.mgits.cms.ui.auth.login.LoginViewModel
 import com.mgits.cms.ui.auth.register.Register
@@ -86,6 +87,10 @@ fun AppNavHost(
 
         composable(ROUTE_RESET_PASSWORD) {
             ResetPassword(loginViewModel, navController)
+        }
+
+        composable(ROUTE_EMAIL_VERIFICATION) {
+            EmailVerification(navController)
         }
 
 
