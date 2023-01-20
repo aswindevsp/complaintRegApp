@@ -1,11 +1,9 @@
 package com.mgits.cms.ui.auth.register
 
 import android.content.Context
-import android.os.Build
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -43,7 +41,7 @@ class RegisterViewModel(
     private val _isLoginSucess = MutableStateFlow(false)
     var isLoginSucess : StateFlow<Boolean> = _isLoginSucess
 
-    @RequiresApi(Build.VERSION_CODES.R)
+
     fun onEvent(event: RegistrationFormEvent, navController: NavController, context: Context) {
         when (event) {
             is RegistrationFormEvent.NameChanged-> {
@@ -70,7 +68,7 @@ class RegisterViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
+
     private fun submitData(navController: NavController, context: Context) {
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)

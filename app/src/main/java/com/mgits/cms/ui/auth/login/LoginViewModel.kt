@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.mgits.cms.navigation.ROUTE_ADMIN_HOME
+import com.mgits.cms.navigation.ROUTE_LOADING
 import com.mgits.cms.navigation.ROUTE_USER_HOME
 import com.mgits.cms.repository.AuthRepository
 import kotlinx.coroutines.delay
@@ -95,7 +96,7 @@ class LoginViewModel(
                 loginUiState.password.isNotBlank()
 
 
-    fun loginUser(context: Context) = viewModelScope.launch {
+    fun loginUser(context: Context, navController: NavController) = viewModelScope.launch {
         try {
             if (!validateLoginForm()) {
                 throw IllegalArgumentException("email and password can not be empty")
@@ -107,6 +108,9 @@ class LoginViewModel(
                 loginUiState.password
             ) { isSuccessful ->
                 loginUiState = if (isSuccessful) {
+                    navController.navigate(ROUTE_LOADING) {
+                        popUpTo(0)
+                    }
                     Toast.makeText(
                         context,
                         "Login Success",

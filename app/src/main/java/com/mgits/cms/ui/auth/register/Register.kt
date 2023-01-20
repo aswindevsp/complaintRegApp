@@ -1,7 +1,6 @@
 package com.mgits.cms.ui.auth.register
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.navigation.ROUTE_LOGIN
 
 
@@ -42,21 +40,23 @@ fun Register(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(horizontal = 18.dp, vertical = 18.dp)
+                .padding(horizontal = 18.dp, vertical = 8.dp)
                 .fillMaxWidth(),
         ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Arrow Back",
-                modifier = Modifier
-                    .clickable { navController.popBackStack() }
-            )
-            Icon(
-                imageVector = Icons.Filled.Help,
-                contentDescription = "Help",
-                modifier = Modifier
-                    .clickable { (navController.navigate(ROUTE_LOGIN)) }
-            )
+            IconButton(onClick = {  navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Arrow Back"
+                )
+            }
+
+            IconButton(onClick = { (navController.navigate(ROUTE_LOGIN)) }) {
+                Icon(
+                    imageVector = Icons.Filled.Help,
+                    contentDescription = "Help",
+                )
+            }
+
         }
 
         Column(
@@ -64,24 +64,9 @@ fun Register(
             verticalArrangement = Arrangement.Center,
 
             modifier = Modifier
-                .padding(all = 10.dp)
+                .padding(start = 100.dp)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            /*Box(
-            modifier = Modifier
-                .height(90.dp)
-                .fillMaxWidth()
-                .padding(
-                    start = 24.dp,
-                    end = 24.dp
-                )){
-        Image(
-            painter = painterResource(id = R.drawable.mil),
-            contentDescription = "mits logo",
-            modifier= Modifier
-                .fillMaxSize()
-        )
-        }*/
             Text(
                 text = "Sign Up",
                 fontWeight = FontWeight.Medium,

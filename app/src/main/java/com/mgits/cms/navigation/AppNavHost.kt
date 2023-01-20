@@ -44,21 +44,10 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         composable(ROUTE_LOGIN) {
-            LoginScreen(navController,
-                onNavToSignUpPage = {navController.navigate("register")},
-                onNavToHomePage = {
-                    profileViewModel.getUserDetails()
-                    navController.navigate("user-home"){
-                    popUpTo(0) } },
-                onNavToAdminPage = {navController.navigate("admin-home"){
-                    adminHomeViewModel.getUnresolvedCount()
-                    adminHomeViewModel.getComplaints()
-                    adminHomeViewModel.getResolvedCount()
-                    popUpTo(0) } },
-                onEmailVerification = {navController.navigate(ROUTE_EMAIL_VERIFICATION) {
-                    popUpTo(0) } },
+            LoginScreen(
+                navController,
                 loginViewModel = loginViewModel,
-            )
+            ) { navController.navigate("register") }
         }
         composable(ROUTE_USER_PROFILE) {
             Profile(

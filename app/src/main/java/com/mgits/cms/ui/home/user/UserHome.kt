@@ -66,7 +66,7 @@ fun UserHome(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+//                        .padding(8.dp)
                 ) {
                     IconButton(onClick = { navController.navigate(ROUTE_USER_PROFILE) }) {
                         Icon(imageVector = Icons.Default.Person, contentDescription = "profile")
@@ -150,7 +150,6 @@ fun UserHome(
                             "Civil-Related",
                             "System-Related"
                         ),
-                        enable = true,
                         parentTextFieldCornerRadius = 5.dp,
                         placeholder = "Complaint Type",
                         dropdownItem = { name ->
@@ -173,7 +172,6 @@ fun UserHome(
                             "Canteen Block",
                             "Others"
                         ),
-                        enable = true,
                         parentTextFieldCornerRadius = 5.dp,
                         placeholder = "Location",
                         dropdownItem = { name ->
@@ -192,7 +190,6 @@ fun UserHome(
                         listOfItems = listOf(
                             "0","1", "2", "3", "4", "5"
                         ),
-                        enable = true,
                         parentTextFieldCornerRadius = 5.dp,
                         placeholder = "Floor",
                         dropdownItem = { name ->

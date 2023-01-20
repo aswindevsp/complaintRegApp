@@ -7,9 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,6 +31,10 @@ fun AdminHome(
     navController: NavController,
     viewModel: AdminHomeViewModel
 ) {
+
+    viewModel.getUnresolvedCount()
+    viewModel.getComplaints()
+    viewModel.getResolvedCount()
 
     val isLoading by viewModel.isLoading.collectAsState()
     var sortedState by remember {
