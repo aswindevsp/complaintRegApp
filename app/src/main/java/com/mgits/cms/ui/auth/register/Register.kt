@@ -1,7 +1,5 @@
 package com.mgits.cms.ui.auth.register
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,19 +19,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.navigation.ROUTE_LOGIN
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun Register(
     navController: NavController,
-    viewModel: RegisterViewModel? = null
+    viewModel: RegisterViewModel? = null,
+    onEmailVerification:() -> Unit
 ) {
     val state = viewModel?.state
     val context = LocalContext.current
@@ -434,7 +432,7 @@ fun Register(
                 )
                 ClickableText(
                     text = AnnotatedString("Log in"),
-                    onClick = { navController.navigate("login") },
+                    onClick = { navController.popBackStack() },
                     style = TextStyle(
                         //fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary

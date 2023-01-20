@@ -1,6 +1,9 @@
 package com.mgits.cms.navigation
 
+import android.content.ContentValues.TAG
+import android.nfc.Tag
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,6 +57,8 @@ fun AppNavHost(
                     adminHomeViewModel.getComplaints()
                     adminHomeViewModel.getResolvedCount()
                     popUpTo(0) } },
+                onEmailVerification = {navController.navigate(ROUTE_EMAIL_VERIFICATION) {
+                    popUpTo(0) } },
                 loginViewModel = loginViewModel,
             )
         }
@@ -74,7 +79,8 @@ fun AppNavHost(
         }
 
         composable(ROUTE_REGISTER) {
-            Register(navController, registerViewModel)
+            Register(navController, registerViewModel, onEmailVerification = {navController.navigate(ROUTE_EMAIL_VERIFICATION) {
+                popUpTo(0) } })
         }
 
         composable(ROUTE_ADMIN_DET) {

@@ -50,6 +50,7 @@ fun LoginScreen(
     onNavToHomePage:() -> Unit,
     onNavToAdminPage:() -> Unit,
     onNavToSignUpPage:() -> Unit,
+    onEmailVerification:() ->Unit
 ) {
 
     val loginUiState = loginViewModel?.loginUiState
