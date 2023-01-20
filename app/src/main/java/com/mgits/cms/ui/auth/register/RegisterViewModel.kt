@@ -1,9 +1,11 @@
 package com.mgits.cms.ui.auth.register
 
 import android.content.Context
+import android.os.Build
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,9 +15,12 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.repository.AuthRepository
 import com.mgits.cms.ui.auth.use_cases.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -35,6 +40,10 @@ class RegisterViewModel(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
+    private val _isLoginSucess = MutableStateFlow(false)
+    var isLoginSucess : StateFlow<Boolean> = _isLoginSucess
+
+    @RequiresApi(Build.VERSION_CODES.R)
     fun onEvent(event: RegistrationFormEvent, navController: NavController, context: Context) {
         when (event) {
             is RegistrationFormEvent.NameChanged-> {
@@ -61,6 +70,7 @@ class RegisterViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun submitData(navController: NavController, context: Context) {
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)
@@ -97,7 +107,7 @@ class RegisterViewModel(
                state.email,
                state.password
            ) { isSuccessful ->
-               state = if (isSuccessful) {
+               if (isSuccessful) {
                    Log.d(TAG, "asdf userCreate success")
                    val db = Firebase.firestore
                    val uId = Firebase.auth.currentUser?.uid
@@ -114,9 +124,9 @@ class RegisterViewModel(
                        db.collection("users").document(uId)
                            .set(payload)
                            .addOnSuccessListener {
-                               Log.d(TAG, "asdf user datils added to db")
-                               Log.d(TAG, "It should have worked")
-                               navController.navigate("login")
+                               navController.navigate(ROUTE_EMAIL_VERIFICATION){
+                                   popUpTo(0)
+                               }
 
                            }
                            .addOnFailureListener {
@@ -124,10 +134,10 @@ class RegisterViewModel(
                                        Toast.makeText(context, "Wow! That shouldn't have happened. Contact admin.", Toast.LENGTH_LONG).show())
                            }
                    }
-                   state.copy(isSuccessLogin = true)
+
                } else {
                    Toast.makeText(context, "Account Already exists", Toast.LENGTH_LONG).show()
-                   state.copy(isSuccessLogin = false)
+
                }
 
            }

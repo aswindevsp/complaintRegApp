@@ -1,7 +1,5 @@
 package com.mgits.cms.ui.auth.register
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,15 +22,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.navigation.ROUTE_LOGIN
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.R)
 @Composable
 fun Register(
     navController: NavController,
-    viewModel: RegisterViewModel? = null
+    viewModel: RegisterViewModel? = null,
+    onEmailVerification:() -> Unit
 ) {
     val state = viewModel?.state
     val context = LocalContext.current
@@ -340,35 +339,50 @@ fun Register(
                     )
 
                     if (state != null) {
-                        ExpandedDropDown(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            listOfItems = listOf(
-                                "CE",
-                                "ME",
-                                "ECE",
-                                "EEE",
-                                "CS-A",
-                                "CS-B",
-                                "CS(AI)",
-                                "CS(AI&DS)",
-                                "CS(Cybersecurity)"
-                            ),
-                            enable = true,
-                            parentTextFieldCornerRadius = 5.dp,
-                            placeholder = "Department",
-                            dropdownItem = { name ->
-                                Text(text = name)
-                            },
-                            onDropDownItemSelected = {
-                                viewModel.onEvent(
-                                    RegistrationFormEvent.DepartmentChanged(it),
-                                    navController,
-                                    context
-                                )
-                            },
-                            isError = state.departmentError != null,
+                        val optoins = listOf(
+                            "CS",
+                            "AI&DS",
+                            "CE",
+                            "ME",
+                            "ECE",
+                            "EEE"
                         )
+                        var expanded by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange ={expanded = !expanded} ) {
+                            OutlinedTextField(
+                                singleLine = true,
+                                value = state.department,
+                                readOnly = true,
+
+                                onValueChange = {  },
+                                isError = state.passwordError != null,
+                                label = {
+                                    Text(
+                                        text = "Department",
+                                        fontSize = 15.sp,
+                                    )
+                                },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp)
+                                    .menuAnchor()
+                            )
+                            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                optoins.forEach {
+                                    DropdownMenuItem(text = { Text(text = it)},
+                                        onClick = {
+                                            expanded = false
+                                            viewModel.onEvent(
+                                                RegistrationFormEvent.DepartmentChanged(it),
+                                                navController,
+                                                context
+                                            )
+                                        })
+                                }
+                            }
+                        }
+
                     }
 
                     if (state != null) {
@@ -387,11 +401,6 @@ fun Register(
                     Divider(
                         modifier = Modifier
                             .padding(all = 5.dp)
-                    )
-                    Text(
-                        text = "*The email that is entered should be of an official mgits account",
-                        fontWeight = FontWeight.Light,
-                        fontSize = 12.sp
                     )
                     Button(
                         onClick = {
@@ -423,7 +432,7 @@ fun Register(
                 )
                 ClickableText(
                     text = AnnotatedString("Log in"),
-                    onClick = { navController.navigate("login") },
+                    onClick = { navController.popBackStack() },
                     style = TextStyle(
                         //fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary
