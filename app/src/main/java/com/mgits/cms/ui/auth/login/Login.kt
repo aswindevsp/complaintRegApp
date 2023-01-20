@@ -1,8 +1,6 @@
 package com.mgits.cms.ui.auth.login
 
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,11 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.mgits.cms.R
-import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -46,14 +40,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun LoginScreen(
     navController: NavController,
-    loginViewModel: LoginViewModel? = null,
+    loginViewModel: LoginViewModel,
     onNavToHomePage:() -> Unit,
     onNavToAdminPage:() -> Unit,
     onNavToSignUpPage:() -> Unit,
     onEmailVerification:() ->Unit
 ) {
 
-    val loginUiState = loginViewModel?.loginUiState
+    val loginUiState = loginViewModel.loginUiState
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -61,36 +55,10 @@ fun LoginScreen(
     // Creating a variable to store toggle state
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val loadingState = loginViewModel?.isLoading?.collectAsState()
-
-    if(loginViewModel?.hasUser == true) {
-        Log.d(TAG, Firebase.auth.currentUser!!.isEmailVerified.toString())
-        if(!Firebase.auth.currentUser!!.isEmailVerified) {
-            navController.navigate(ROUTE_EMAIL_VERIFICATION)
-        }
-        loginViewModel.isAdmin()
-        if (loadingState != null) {
-            if(loadingState.value) {
-                if (loginViewModel.isAdminVal)
-                    onNavToAdminPage.invoke()
-                else
-                    onNavToHomePage.invoke()
-            } else {
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    LoadingAnimation()
-                }
-            }
-        }
+    val loadingState = loginViewModel.isLoading.collectAsState()
 
 
-    }
-    else
+
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -146,10 +114,15 @@ fun LoginScreen(
             ) {
                 OutlinedTextField(
                     value = loginUiState?.email ?: "",
-                    onValueChange = {loginViewModel?.onEmailChange(it)},
+                    onValueChange = { loginViewModel?.onEmailChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "emailIcon"
+                        )
+                    },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
@@ -157,12 +130,12 @@ fun LoginScreen(
                         imeAction = ImeAction.Next
                     ),
 //                    placeholder = { Text(text = "abc@mgits.ac.in")},
-                    label = { Text(text = "Email")},
+                    label = { Text(text = "Email") },
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
+                ) {
                     if (loginViewModel != null) {
                         if (loginViewModel.validateEmail()) {
                             Text(
@@ -182,7 +155,12 @@ fun LoginScreen(
                     onValueChange = { loginViewModel?.onPasswordChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "lockIcon") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "lockIcon"
+                        )
+                    },
                     keyboardActions = KeyboardActions(onDone = {
                         loginViewModel?.loginUser(context)
                         keyboardController?.hide()
@@ -194,10 +172,10 @@ fun LoginScreen(
                         imeAction = ImeAction.Done
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    label = {Text(text = "Password")},
+                    label = { Text(text = "Password") },
                     trailingIcon = {
                         if (loginUiState != null) {
-                            if(loginUiState.password.isNotBlank()) {
+                            if (loginUiState.password.isNotBlank()) {
                                 val image = if (passwordVisible)
                                     Icons.Filled.Visibility
                                 else Icons.Filled.VisibilityOff
@@ -216,11 +194,11 @@ fun LoginScreen(
 
                 )
 
-                Row (
+                Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
+                ) {
                     Text(
                         text = "Forgot Password?",
                         textAlign = TextAlign.End,
@@ -233,8 +211,8 @@ fun LoginScreen(
                     onClick = {
                         loginViewModel?.loginUser(context)
                         if (loginUiState != null) {
-                            if(loginUiState.isSuccessLogin){
-                                loginViewModel.isAdmin()
+                            if (loginUiState.isSuccessLogin) {
+                                loginViewModel.isAdmin(navController)
 
                                 if (loginViewModel.isAdminVal)
                                     onNavToAdminPage.invoke()
@@ -253,7 +231,7 @@ fun LoginScreen(
                         ),
                     shape = RoundedCornerShape(32.dp),
 
-                ) {
+                    ) {
                     if (!loginUiState!!.isLoading) {
                         Text(
                             text = "Login",
@@ -275,7 +253,7 @@ fun LoginScreen(
             }
 
         }
-        Row{
+        Row {
             Text(
                 text = "Don't have an account? "
             )
@@ -288,5 +266,4 @@ fun LoginScreen(
             )
         }
     }
-
 }
