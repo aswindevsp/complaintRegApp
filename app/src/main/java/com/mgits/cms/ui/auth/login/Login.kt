@@ -31,20 +31,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.R
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoroutinesApi::class,
+@OptIn(ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
 fun LoginScreen(
     navController: NavController,
     loginViewModel: LoginViewModel,
-    onNavToHomePage:() -> Unit,
-    onNavToAdminPage:() -> Unit,
-    onNavToSignUpPage:() -> Unit,
-    onEmailVerification:() ->Unit
+    onNavToSignUpPage: () -> Unit
 ) {
 
     val loginUiState = loginViewModel.loginUiState
@@ -55,7 +51,6 @@ fun LoginScreen(
     // Creating a variable to store toggle state
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val loadingState = loginViewModel.isLoading.collectAsState()
 
 
 
@@ -113,8 +108,8 @@ fun LoginScreen(
                 modifier = Modifier.padding(all = 10.dp)
             ) {
                 OutlinedTextField(
-                    value = loginUiState?.email ?: "",
-                    onValueChange = { loginViewModel?.onEmailChange(it) },
+                    value = loginUiState.email ,
+                    onValueChange = { loginViewModel.onEmailChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
                     leadingIcon = {
@@ -136,23 +131,21 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    if (loginViewModel != null) {
-                        if (loginViewModel.validateEmail()) {
-                            Text(
-                                text = "Require @mgits.ac.in",
-                                color = MaterialTheme.colorScheme.error,
-                                /*TODO*/
-                                //style = MaterialTheme.typography.caption,
-                                modifier = Modifier.padding(start = 16.dp)
-                            )
-                        }
+                    if (loginViewModel.validateEmail()) {
+                        Text(
+                            text = "Require @mgits.ac.in",
+                            color = MaterialTheme.colorScheme.error,
+                            /*TODO*/
+                            //style = MaterialTheme.typography.caption,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
                     }
                 }
 
 
                 OutlinedTextField(
-                    value = loginUiState?.password ?: "",
-                    onValueChange = { loginViewModel?.onPasswordChange(it) },
+                    value = loginUiState.password ,
+                    onValueChange = { loginViewModel.onPasswordChange(it) },
                     modifier = Modifier
                         .fillMaxWidth(),
                     leadingIcon = {
@@ -162,7 +155,7 @@ fun LoginScreen(
                         )
                     },
                     keyboardActions = KeyboardActions(onDone = {
-                        loginViewModel?.loginUser(context)
+                        loginViewModel.loginUser(context, navController)
                         keyboardController?.hide()
                     }),
                     keyboardOptions = KeyboardOptions(
@@ -174,20 +167,18 @@ fun LoginScreen(
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     label = { Text(text = "Password") },
                     trailingIcon = {
-                        if (loginUiState != null) {
-                            if (loginUiState.password.isNotBlank()) {
-                                val image = if (passwordVisible)
-                                    Icons.Filled.Visibility
-                                else Icons.Filled.VisibilityOff
+                        if (loginUiState.password.isNotBlank()) {
+                            val image = if (passwordVisible)
+                                Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff
 
-                                // Localized description for accessibility services
-                                val description =
-                                    if (passwordVisible) "Hide password" else "Show password"
+                            // Localized description for accessibility services
+                            val description =
+                                if (passwordVisible) "Hide password" else "Show password"
 
-                                // Toggle button to hide or display password
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                    Icon(imageVector = image, description)
-                                }
+                            // Toggle button to hide or display password
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(imageVector = image, description)
                             }
                         }
                     }
@@ -208,19 +199,7 @@ fun LoginScreen(
                     )
                 }
                 Button(
-                    onClick = {
-                        loginViewModel?.loginUser(context)
-                        if (loginUiState != null) {
-                            if (loginUiState.isSuccessLogin) {
-                                loginViewModel.isAdmin(navController)
-
-                                if (loginViewModel.isAdminVal)
-                                    onNavToAdminPage.invoke()
-                                else
-                                    onNavToHomePage.invoke()
-                            }
-                        }
-                    },
+                    onClick = {loginViewModel.loginUser(context, navController) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(70.dp)
@@ -230,9 +209,8 @@ fun LoginScreen(
                             end = 32.dp
                         ),
                     shape = RoundedCornerShape(32.dp),
-
                     ) {
-                    if (!loginUiState!!.isLoading) {
+                    if (!loginUiState.isLoading) {
                         Text(
                             text = "Login",
                             fontSize = 16.sp,

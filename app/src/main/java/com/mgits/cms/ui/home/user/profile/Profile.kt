@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -29,7 +28,7 @@ fun Profile(
 
     val scrollState = rememberScrollState(0)
 
-
+    viewModel.getUserDetails()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -146,7 +145,6 @@ fun ProfileCard(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(Color.White),
         shape = RoundedCornerShape(0.dp)
     ) {
         Row(
