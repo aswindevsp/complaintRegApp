@@ -1,9 +1,6 @@
 package com.mgits.cms.navigation
 
-import android.content.ContentValues.TAG
-import android.nfc.Tag
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,6 +22,7 @@ import com.mgits.cms.ui.home.user.UserHome
 import com.mgits.cms.ui.home.user.UserHomeViewModel
 import com.mgits.cms.ui.home.user.profile.Profile
 import com.mgits.cms.ui.home.user.profile.ProfileViewModel
+import com.mgits.cms.ui.loading.Loading
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -32,7 +30,7 @@ import com.mgits.cms.ui.home.user.profile.ProfileViewModel
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
-    var startDestination: String = ROUTE_LOGIN
+    var startDestination: String = ROUTE_LOADING
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
@@ -97,6 +95,10 @@ fun AppNavHost(
 
         composable(ROUTE_EMAIL_VERIFICATION) {
             EmailVerification(navController)
+        }
+        
+        composable(ROUTE_LOADING) {
+            Loading(navController)
         }
 
 

@@ -1,6 +1,5 @@
 package com.mgits.cms.ui.auth.email_verification
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mgits.cms.navigation.ROUTE_USER_HOME
 import kotlinx.coroutines.DelicateCoroutinesApi
