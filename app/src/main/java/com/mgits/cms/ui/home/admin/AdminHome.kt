@@ -92,7 +92,7 @@ fun AdminHome(
                     ) {
                         Text(
                             text = "Complaints",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
