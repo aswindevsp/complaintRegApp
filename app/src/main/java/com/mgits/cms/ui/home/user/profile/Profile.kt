@@ -145,7 +145,8 @@ fun ProfileCard(
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(0.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(
             modifier = Modifier

@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 fun <T> ExpandedDropDown(
     modifier: Modifier = Modifier,
     listOfItems: List<T>,
+    value: String,
     isError: Boolean = false,
     readOnly: Boolean = false,
     placeholder: String = "Select Option",
@@ -24,14 +25,14 @@ fun <T> ExpandedDropDown(
     dropdownItem: @Composable (T) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by rememberSaveable { mutableStateOf("") }
+    var selectedOptionText by rememberSaveable { mutableStateOf(value) }
 
 
     Column() {
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange ={expanded = !expanded} ) {
             OutlinedTextField(
                 singleLine = true,
-                value = selectedOptionText,
+                value = value,
                 readOnly = true,
                 onValueChange = {  },
                 label = {
