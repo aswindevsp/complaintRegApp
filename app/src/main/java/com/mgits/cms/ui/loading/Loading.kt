@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.mgits.cms.ui.auth.login.LoadingAnimation
+import com.mgits.cms.components.LoadingAnimation
 
 @Composable
 fun Loading(

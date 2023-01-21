@@ -66,8 +66,7 @@ fun AppNavHost(
         }
 
         composable(ROUTE_REGISTER) {
-            Register(navController, registerViewModel, onEmailVerification = {navController.navigate(ROUTE_EMAIL_VERIFICATION) {
-                popUpTo(0) } })
+            Register(navController, registerViewModel)
         }
 
         composable(ROUTE_ADMIN_DET) {

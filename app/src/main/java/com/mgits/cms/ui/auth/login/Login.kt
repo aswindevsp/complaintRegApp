@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.R
+import com.mgits.cms.components.LoadingAnimation
 import com.mgits.cms.navigation.ROUTE_RESET_PASSWORD
 
 
@@ -82,6 +83,7 @@ fun LoginScreen(
         Text(
             text = "MITS Complaint Management System",
             fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 20.sp,
             modifier = Modifier
                 .padding(
@@ -90,7 +92,6 @@ fun LoginScreen(
                     end = 32.dp
                 ),
             textAlign = TextAlign.Center,
-            fontStyle = FontStyle.Italic
         )
         Card(
             modifier = Modifier

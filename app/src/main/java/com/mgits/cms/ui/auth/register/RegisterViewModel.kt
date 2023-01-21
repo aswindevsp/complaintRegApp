@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -106,7 +107,6 @@ class RegisterViewModel(
                state.password
            ) { isSuccessful ->
                if (isSuccessful) {
-                   Log.d(TAG, "asdf userCreate success")
                    val db = Firebase.firestore
                    val uId = Firebase.auth.currentUser?.uid
 
@@ -116,6 +116,7 @@ class RegisterViewModel(
                        "name" to state.name,
                        "admin" to false,
                        "phoneNo" to state.phoneNo,
+                       "createOn" to Timestamp.now()
                    )
 
                    if (uId != null) {

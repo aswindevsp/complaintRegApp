@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.navigation.ROUTE_LOGIN
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +31,6 @@ import com.mgits.cms.navigation.ROUTE_LOGIN
 fun Register(
     navController: NavController,
     viewModel: RegisterViewModel? = null,
-    onEmailVerification:() -> Unit
 ) {
     val state = viewModel?.state
     val context = LocalContext.current
@@ -37,50 +38,48 @@ fun Register(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)){
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(horizontal = 18.dp, vertical = 8.dp)
-                .fillMaxWidth(),
-        ) {
-            IconButton(onClick = {  navController.popBackStack() }) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Arrow Back"
-                )
-            }
 
-            IconButton(onClick = { (navController.navigate(ROUTE_LOGIN)) }) {
-                Icon(
-                    imageVector = Icons.Filled.Help,
-                    contentDescription = "Help",
-                )
+        TopAppBar(
+            modifier = Modifier,
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            title = { },
+            navigationIcon = {
+                IconButton(onClick = {  navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Arrow Back"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { (navController.navigate(ROUTE_LOGIN)) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Help,
+                        contentDescription = "Help",
+                    )
+                }
             }
-
-        }
+        )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+           // verticalArrangement = Arrangement.Center,
 
             modifier = Modifier
-                .padding(start = 100.dp)
                 .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
         ) {
             Text(
-                text = "Sign Up",
-                fontWeight = FontWeight.Medium,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .height(44.dp)
-
+                text = "MITS CMS".uppercase(),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Create an account in order to file a complaint",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .height(34.dp)
+                text = "Create New Account",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Card(
                 elevation = CardDefaults.cardElevation(0.dp),
@@ -412,8 +411,8 @@ fun Register(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "Already have an account?",
-                    fontWeight = FontWeight.Medium,
-                    //fontSize = 13.sp
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 ClickableText(
                     text = AnnotatedString("Log in"),

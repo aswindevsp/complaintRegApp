@@ -1,4 +1,4 @@
-package com.mgits.cms.ui.auth.login
+package com.mgits.cms.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
