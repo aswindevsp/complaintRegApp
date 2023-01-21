@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.mgits.cms.navigation.ROUTE_ADMIN_HOME
 import com.mgits.cms.navigation.ROUTE_LOGIN
-import com.mgits.cms.ui.auth.login.LoadingAnimation
+import com.mgits.cms.components.LoadingAnimation
 import com.mgits.cms.ui.home.admin.AdminHomeViewModel
 
 

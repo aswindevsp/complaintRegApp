@@ -1,5 +1,7 @@
 package com.mgits.cms.ui.home.admin
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -66,9 +68,9 @@ class AdminHomeViewModel @Inject constructor(
 
     fun getComplaints() {
         viewModelScope.launch {
-            _isLoading.value = true
             data.value = repository.getComplaintsFromSever()
             getUnresolvedCount()
+            Log.d(TAG, data.value.toString())
             delay(1500)
             _isLoading.value = false
         }
@@ -88,6 +90,8 @@ class AdminHomeViewModel @Inject constructor(
 
 
     }
+
+
 
 
 //

@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mgits.cms.ui.auth.email_verification.EmailVerification
 import com.mgits.cms.ui.auth.login.LoginScreen
 import com.mgits.cms.ui.auth.login.LoginViewModel
 import com.mgits.cms.ui.auth.register.Register
@@ -21,6 +22,7 @@ import com.mgits.cms.ui.home.user.UserHome
 import com.mgits.cms.ui.home.user.UserHomeViewModel
 import com.mgits.cms.ui.home.user.profile.Profile
 import com.mgits.cms.ui.home.user.profile.ProfileViewModel
+import com.mgits.cms.ui.loading.Loading
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -28,7 +30,7 @@ import com.mgits.cms.ui.home.user.profile.ProfileViewModel
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
-    var startDestination: String = ROUTE_LOGIN
+    var startDestination: String = ROUTE_LOADING
     val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
@@ -42,19 +44,10 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         composable(ROUTE_LOGIN) {
-            LoginScreen(navController,
-                onNavToSignUpPage = {navController.navigate("register")},
-                onNavToHomePage = {
-                    profileViewModel.getUserDetails()
-                    navController.navigate("user-home"){
-                    popUpTo(0) } },
-                onNavToAdminPage = {navController.navigate("admin-home"){
-                    adminHomeViewModel.getUnresolvedCount()
-                    adminHomeViewModel.getComplaints()
-                    adminHomeViewModel.getResolvedCount()
-                    popUpTo(0) } },
+            LoginScreen(
+                navController,
                 loginViewModel = loginViewModel,
-            )
+            ) { navController.navigate("register") }
         }
         composable(ROUTE_USER_PROFILE) {
             Profile(
@@ -86,6 +79,14 @@ fun AppNavHost(
 
         composable(ROUTE_RESET_PASSWORD) {
             ResetPassword(loginViewModel, navController)
+        }
+
+        composable(ROUTE_EMAIL_VERIFICATION) {
+            EmailVerification(navController)
+        }
+        
+        composable(ROUTE_LOADING) {
+            Loading(navController)
         }
 
 

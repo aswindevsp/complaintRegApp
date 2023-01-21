@@ -123,7 +123,6 @@ data class HomeUiState(
     val name: String = "",
     val complaintType: String = "",
     val location: String = "",
-    val block: String = "",
     val Description: String = "",
     val count: Int = 0,
     var date: LocalDate = LocalDate.now()

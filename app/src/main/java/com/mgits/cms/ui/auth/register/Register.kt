@@ -1,9 +1,6 @@
 package com.mgits.cms.ui.auth.register
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -11,9 +8,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -24,81 +23,67 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mgits.cms.navigation.ROUTE_LOGIN
+import kotlinx.coroutines.launch
 
 
-@RequiresApi(Build.VERSION_CODES.R)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Register(
     navController: NavController,
-    viewModel: RegisterViewModel? = null
+    viewModel: RegisterViewModel? = null,
 ) {
     val state = viewModel?.state
     val context = LocalContext.current
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)){
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(horizontal = 18.dp, vertical =18.dp)
-                .fillMaxWidth(),
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Arrow Back",
-                modifier = Modifier
-                    .clickable { navController.popBackStack() }
-            )
-            Icon(
-                imageVector = Icons.Filled.Help,
-                contentDescription = "Help",
-                modifier = Modifier
-                    .clickable { (navController.navigate(ROUTE_LOGIN)) }
-            )
-        }
+            .background(MaterialTheme.colorScheme.background)){
+
+        TopAppBar(
+            modifier = Modifier,
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            title = { },
+            navigationIcon = {
+                IconButton(onClick = {  navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Arrow Back"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { (navController.navigate(ROUTE_LOGIN)) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Help,
+                        contentDescription = "Help",
+                    )
+                }
+            }
+        )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+           // verticalArrangement = Arrangement.Center,
 
             modifier = Modifier
-                .padding(all = 10.dp)
-                .background(MaterialTheme.colors.background)
-        ) {
-            /*Box(
-            modifier = Modifier
-                .height(90.dp)
-                .fillMaxWidth()
-                .padding(
-                    start = 24.dp,
-                    end = 24.dp
-                )){
-        Image(
-            painter = painterResource(id = R.drawable.mil),
-            contentDescription = "mits logo",
-            modifier= Modifier
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-        )
-        }*/
+        ) {
             Text(
-                text = "Sign Up",
-                fontWeight = FontWeight.Medium,
-                fontSize = 30.sp,
-                modifier = Modifier
-                    .height(44.dp)
-
+                text = "MITS CMS".uppercase(),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Create an account in order to file a complaint",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .height(34.dp)
+                text = "Create New Account",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Card(
-                elevation = 0.dp,
-                backgroundColor = MaterialTheme.colors.background
+                elevation = CardDefaults.cardElevation(0.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
             ) {
                 Column(
                     horizontalAlignment = Alignment.Start,
@@ -141,7 +126,7 @@ fun Register(
                         if (state.nameError != null) {
                             Text(
                                 text = state.nameError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -183,7 +168,7 @@ fun Register(
                         if (state.emailError != null) {
                             Text(
                                 text = state.emailError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -231,7 +216,7 @@ fun Register(
                         if (state.passwordError != null) {
                             Text(
                                 text = state.passwordError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -275,7 +260,7 @@ fun Register(
                         if (state.repeatedPasswordError != null) {
                             Text(
                                 text = state.repeatedPasswordError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -321,7 +306,7 @@ fun Register(
                         if (state.phoneNoError != null) {
                             Text(
                                 text = state.phoneNoError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -338,42 +323,57 @@ fun Register(
                     )
 
                     if (state != null) {
-                        ExpandedDropDown(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            listOfItems = listOf(
-                                "CE",
-                                "ME",
-                                "ECE",
-                                "EEE",
-                                "CS-A",
-                                "CS-B",
-                                "CS(AI)",
-                                "CS(AI&DS)",
-                                "CS(Cybersecurity)"
-                            ),
-                            enable = true,
-                            parentTextFieldCornerRadius = 5.dp,
-                            placeholder = "Department",
-                            dropdownItem = { name ->
-                                Text(text = name)
-                            },
-                            onDropDownItemSelected = {
-                                viewModel.onEvent(
-                                    RegistrationFormEvent.DepartmentChanged(it),
-                                    navController,
-                                    context
-                                )
-                            },
-                            isError = state.departmentError != null,
+                        val optoins = listOf(
+                            "CS",
+                            "AI&DS",
+                            "CE",
+                            "ME",
+                            "ECE",
+                            "EEE"
                         )
+                        var expanded by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange ={expanded = !expanded} ) {
+                            OutlinedTextField(
+                                singleLine = true,
+                                value = state.department,
+                                readOnly = true,
+
+                                onValueChange = {  },
+                                isError = state.passwordError != null,
+                                label = {
+                                    Text(
+                                        text = "Department",
+                                        fontSize = 15.sp,
+                                    )
+                                },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp)
+                                    .menuAnchor()
+                            )
+                            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                optoins.forEach {
+                                    DropdownMenuItem(text = { Text(text = it)},
+                                        onClick = {
+                                            expanded = false
+                                            viewModel.onEvent(
+                                                RegistrationFormEvent.DepartmentChanged(it),
+                                                navController,
+                                                context
+                                            )
+                                        })
+                                }
+                            }
+                        }
+
                     }
 
                     if (state != null) {
                         if (state.departmentError != null) {
                             Text(
                                 text = state.departmentError,
-                                color = MaterialTheme.colors.error,
+                                color = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.align(Alignment.Start),
                                 fontSize = 11.sp
                             )
@@ -385,11 +385,6 @@ fun Register(
                     Divider(
                         modifier = Modifier
                             .padding(all = 5.dp)
-                    )
-                    Text(
-                        text = "*The email that is entered should be of an official mgits account",
-                        fontWeight = FontWeight.Light,
-                        fontSize = 12.sp
                     )
                     Button(
                         onClick = {
@@ -416,15 +411,15 @@ fun Register(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "Already have an account?",
-                    fontWeight = FontWeight.Medium,
-                    //fontSize = 13.sp
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 ClickableText(
                     text = AnnotatedString("Log in"),
-                    onClick = { navController.navigate("login") },
+                    onClick = { navController.popBackStack() },
                     style = TextStyle(
                         //fontSize = 14.sp,
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     )
                 )
             }

@@ -10,12 +10,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.mgits.cms.navigation.ROUTE_EMAIL_VERIFICATION
 import com.mgits.cms.repository.AuthRepository
 import com.mgits.cms.ui.auth.use_cases.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -34,6 +38,10 @@ class RegisterViewModel(
 
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
+
+    private val _isLoginSucess = MutableStateFlow(false)
+    var isLoginSucess : StateFlow<Boolean> = _isLoginSucess
+
 
     fun onEvent(event: RegistrationFormEvent, navController: NavController, context: Context) {
         when (event) {
@@ -60,6 +68,7 @@ class RegisterViewModel(
             }
         }
     }
+
 
     private fun submitData(navController: NavController, context: Context) {
         val nameResult = validateName.execute(state.name)
@@ -97,8 +106,7 @@ class RegisterViewModel(
                state.email,
                state.password
            ) { isSuccessful ->
-               state = if (isSuccessful) {
-                   Log.d(TAG, "asdf userCreate success")
+               if (isSuccessful) {
                    val db = Firebase.firestore
                    val uId = Firebase.auth.currentUser?.uid
 
@@ -108,15 +116,16 @@ class RegisterViewModel(
                        "name" to state.name,
                        "admin" to false,
                        "phoneNo" to state.phoneNo,
+                       "createOn" to Timestamp.now()
                    )
 
                    if (uId != null) {
                        db.collection("users").document(uId)
                            .set(payload)
                            .addOnSuccessListener {
-                               Log.d(TAG, "asdf user datils added to db")
-                               Log.d(TAG, "It should have worked")
-                               navController.navigate("login")
+                               navController.navigate(ROUTE_EMAIL_VERIFICATION){
+                                   popUpTo(0)
+                               }
 
                            }
                            .addOnFailureListener {
@@ -124,10 +133,10 @@ class RegisterViewModel(
                                        Toast.makeText(context, "Wow! That shouldn't have happened. Contact admin.", Toast.LENGTH_LONG).show())
                            }
                    }
-                   state.copy(isSuccessLogin = true)
+
                } else {
                    Toast.makeText(context, "Account Already exists", Toast.LENGTH_LONG).show()
-                   state.copy(isSuccessLogin = false)
+
                }
 
            }
