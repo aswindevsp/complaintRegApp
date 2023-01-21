@@ -34,7 +34,6 @@ fun AdminHome(
     viewModel.getComplaints()
     viewModel.getResolvedCount()
 
-    val isLoading by viewModel.isLoading.collectAsState()
     var sortedState by remember {
         mutableStateOf(viewModel.sortState)
     }
