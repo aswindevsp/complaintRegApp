@@ -18,7 +18,10 @@ import com.mgits.cms.navigation.ROUTE_USER_COMPLAINT_DETAILS
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserComplaintHistory(viewModel: UserHomeViewModel, navController: NavController) {
-    viewModel.getComplaints()
+
+    if(viewModel.data.value.data!!.isEmpty()) {
+        viewModel.getComplaints()
+    }
 
     val com = viewModel.data.value.data!!
 

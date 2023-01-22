@@ -2,6 +2,7 @@ package com.mgits.cms.repository
 
 
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.AggregateSource
@@ -18,12 +19,15 @@ import javax.inject.Singleton
 
 @Singleton
 class StorageRepository @Inject constructor(
-    private val queryProductsByName: Query
+
 ) {
 
     private val db = Firebase.firestore
     private val auth = Firebase.auth
-    var userId = auth.currentUser?.uid
+    private var userId = auth.currentUser?.uid
+
+    //for instance caching
+    private var localUserDetails: DataOrException<UserDetails, Exception>? = null
 
     private suspend fun getAdminType(): String? {
         //updates user id if the userid is not fetched initially
@@ -35,7 +39,7 @@ class StorageRepository @Inject constructor(
     }
 
     suspend fun getComplaintsFromSever(): DataOrException<List<Complaints>, Exception> {
-
+        Log.d(TAG, "reg complaints normal")
         val adminType = getAdminType()
         val dataOrException = DataOrException<List<Complaints>, Exception>()
 
@@ -52,7 +56,7 @@ class StorageRepository @Inject constructor(
         } else {
             try {
                 dataOrException.data =
-                    db.collection("complaints").get()
+                    db.collection("complaints").orderBy("registeredTimeStamp", Query.Direction.DESCENDING).get()
                         .await().map {
                             it.toObject(Complaints::class.java)
                         }
@@ -60,17 +64,18 @@ class StorageRepository @Inject constructor(
                 dataOrException.e = e
             }
         }
-
+        dataOrException.data
         return dataOrException
     }
 
     suspend fun getRegisteredComplaints(): DataOrException<List<Complaints>, Exception> {
-        userId = Firebase.auth.currentUser!!.uid;
+        Log.d(TAG, "reg complaints")
+        userId = Firebase.auth.currentUser!!.uid
         val dataOrException = DataOrException<List<Complaints>, Exception>()
 
         try {
             dataOrException.data =
-                    db.collection("complaints").whereEqualTo("complainantID", userId).get()
+                    db.collection("complaints").whereEqualTo("complainantID", userId).orderBy("registeredTimeStamp", Query.Direction.DESCENDING).get()
                         .await().map {
                             it.toObject(Complaints::class.java)
                         }
@@ -83,17 +88,22 @@ class StorageRepository @Inject constructor(
 
 
     suspend fun getUserDetails():DataOrException<UserDetails, Exception> {
-        userId = Firebase.auth.currentUser?.uid
-        val userDetails = DataOrException<UserDetails, Exception>()
-        if (userId != null) {
-            try {
-                userDetails.data = db.collection("users").document(userId!!).get().await()
-                    .toObject(UserDetails::class.java)
-            } catch (_: FirebaseFirestoreException) {
 
+        userId = Firebase.auth.currentUser?.uid
+        var userDetails = DataOrException<UserDetails, Exception>()
+        if(localUserDetails != null) {
+            userDetails = localUserDetails as DataOrException<UserDetails, Exception>
+        } else {
+            if (userId != null) {
+                try {
+                    userDetails.data = db.collection("users").document(userId!!).get().await()
+                        .toObject(UserDetails::class.java)
+                } catch (_: FirebaseFirestoreException) {
+                }
             }
         }
-        Log.d("TAG", "User details: $userDetails")
+
+        localUserDetails = userDetails
         return userDetails
     }
 
