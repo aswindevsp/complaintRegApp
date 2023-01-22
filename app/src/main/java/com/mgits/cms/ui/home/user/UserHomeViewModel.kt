@@ -1,7 +1,10 @@
 package com.mgits.cms.ui.home.user
 
+import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,18 +14,32 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.mgits.cms.data.Complaints
+import com.mgits.cms.data.DataOrException
+import com.mgits.cms.repository.StorageRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
+import javax.inject.Inject
 
-class UserHomeViewModel(): ViewModel() {
+@HiltViewModel
+class UserHomeViewModel @Inject constructor(
+    private val repository: StorageRepository
+): ViewModel() {
 
-
+    val pageOptions = listOf("Register Complaint", "Registered Complaints")
+    var pageState = "Register Complaint"
 
 
     var homeUiState by mutableStateOf(HomeUiState())
         private set
 
+    var tempCompDetails: Complaints = Complaints("", "", "", "", "", "", "", )
+    fun updateCmpId(id: Complaints) {
+        tempCompDetails = id
+    }
     fun onLocationChange(location: String) {
         homeUiState = homeUiState.copy(location = location)
     }
@@ -46,6 +63,13 @@ class UserHomeViewModel(): ViewModel() {
         homeUiState = homeUiState.copy(date = date)
     }
 
+    val data: MutableState<DataOrException<List<Complaints>, Exception>> = mutableStateOf(
+        DataOrException(
+            listOf(),
+            Exception("")
+        )
+    )
+
 
 
     private fun checkForms(): Boolean {
@@ -57,6 +81,16 @@ class UserHomeViewModel(): ViewModel() {
             false
         else homeUiState.complaintType.isNotBlank()
     }
+
+
+    fun getComplaints() {
+        viewModelScope.launch {
+            data.value = repository.getRegisteredComplaints()
+            Log.d(ContentValues.TAG, data.value.toString())
+            delay(1500)
+        }
+    }
+
 
     fun sendComplaint(context: Context) {
         val db = Firebase.firestore

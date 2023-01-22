@@ -17,6 +17,8 @@ import com.mgits.cms.ui.home.admin.AdminHome
 import com.mgits.cms.ui.home.admin.AdminHomeViewModel
 import com.mgits.cms.ui.home.admin.details.DetailedView
 import com.mgits.cms.ui.home.admin.loading.AdminLoadingScreen
+import com.mgits.cms.ui.home.user.UserComplaintHistory
+import com.mgits.cms.ui.home.user.UserDetailedView
 import com.mgits.cms.ui.home.user.UserHome
 import com.mgits.cms.ui.home.user.UserHomeViewModel
 import com.mgits.cms.ui.home.user.profile.Profile
@@ -24,13 +26,12 @@ import com.mgits.cms.ui.home.user.profile.ProfileViewModel
 import com.mgits.cms.ui.loading.Loading
 
 
-
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
     var startDestination: String = ROUTE_LOADING
-    val userHomeViewModel = viewModel(modelClass = UserHomeViewModel()::class.java)
+    val userHomeViewModel = viewModel(modelClass = UserHomeViewModel::class.java)
     val registerViewModel = viewModel(modelClass = RegisterViewModel()::class.java)
     val adminHomeViewModel = viewModel(modelClass = AdminHomeViewModel::class.java)
     val profileViewModel = viewModel(modelClass = ProfileViewModel::class.java)
@@ -86,6 +87,14 @@ fun AppNavHost(
         
         composable(ROUTE_LOADING) {
             Loading(navController)
+        }
+
+        composable(ROUTE_USER_COMPLAINTS) {
+            UserComplaintHistory(userHomeViewModel, navController)
+        }
+
+        composable(ROUTE_USER_COMPLAINT_DETAILS) {
+            UserDetailedView(navController = navController, viewModel = userHomeViewModel)
         }
 
 
