@@ -35,10 +35,6 @@ fun ComplaintCard(
                 bottom = 4.dp
             )
             .fillMaxWidth(),
-//        elevation = 3.dp,
-//        onClick = {
-//
-//        }
     ) {
         Column(
             modifier = Modifier
