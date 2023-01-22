@@ -6,7 +6,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -176,12 +178,13 @@ fun ComplaintForm(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .padding(all = 10.dp)
+                .verticalScroll(rememberScrollState())
         )
         {
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 OutlinedTextField(
                     readOnly = true,
