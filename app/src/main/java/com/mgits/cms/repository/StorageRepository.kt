@@ -64,6 +64,24 @@ class StorageRepository @Inject constructor(
         return dataOrException
     }
 
+    suspend fun getRegisteredComplaints(): DataOrException<List<Complaints>, Exception> {
+        userId = Firebase.auth.currentUser!!.uid;
+        val dataOrException = DataOrException<List<Complaints>, Exception>()
+
+        try {
+            dataOrException.data =
+                    db.collection("complaints").whereEqualTo("complainantID", userId).get()
+                        .await().map {
+                            it.toObject(Complaints::class.java)
+                        }
+        } catch (e: FirebaseFirestoreException) {
+                dataOrException.e = e
+        }
+
+        return dataOrException
+    }
+
+
     suspend fun getUserDetails():DataOrException<UserDetails, Exception> {
         userId = Firebase.auth.currentUser?.uid
         val userDetails = DataOrException<UserDetails, Exception>()
