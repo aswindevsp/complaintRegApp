@@ -126,6 +126,7 @@ class UserHomeViewModel @Inject constructor(
                 db.collection("complaints").document(complaintId)
                     .set(payload)
                     .addOnSuccessListener {
+                        getComplaints()
                         Toast.makeText(context, "Complaint Registered", Toast.LENGTH_LONG).show()
                         onLocationChange("")
                         onFloorChange("")

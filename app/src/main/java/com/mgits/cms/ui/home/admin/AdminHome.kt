@@ -30,9 +30,11 @@ fun AdminHome(
     viewModel: AdminHomeViewModel
 ) {
 
-    viewModel.getUnresolvedCount()
-    viewModel.getComplaints()
-    viewModel.getResolvedCount()
+    if(viewModel.data.value.data!!.isEmpty()) {
+        viewModel.getUnresolvedCount()
+        viewModel.getComplaints()
+        viewModel.getResolvedCount()
+    }
 
     var sortedState by remember {
         mutableStateOf(viewModel.sortState)
