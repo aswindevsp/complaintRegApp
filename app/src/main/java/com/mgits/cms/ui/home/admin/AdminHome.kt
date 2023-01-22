@@ -1,11 +1,9 @@
 package com.mgits.cms.ui.home.admin
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -13,10 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.mgits.cms.data.Complaints
 import com.mgits.cms.data.DataOrException
@@ -48,6 +43,7 @@ fun AdminHome(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    var expanded by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -118,7 +114,7 @@ fun AdminHome(
                 },
                 actions = {
                     IconButton(
-                        onClick = { popupControl = !popupControl },
+                        onClick = { expanded = !expanded},
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
@@ -128,87 +124,36 @@ fun AdminHome(
                     }
                 }
             )
+            Box(modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.TopEnd)) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("All") },
+                        onClick = {
+                            viewModel.sortState = "default"
+                            sortedState = "default" })
+                    DropdownMenuItem(
+                        text = { Text("Unresolved") },
+                        onClick = {
+                            viewModel.sortState = "unresolved"
+                            sortedState = "unresolved"
+                        })
+                    DropdownMenuItem(
+                        text = { Text("Resolved") },
+                        onClick = {
+                            viewModel.sortState = "resolved"
+                            sortedState = "resolved" },
+                        )
+                }
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (popupControl) {
-                    Popup(
-                        alignment = Alignment.TopEnd,
-                        properties = PopupProperties(
-                            dismissOnBackPress = true,
-                            dismissOnClickOutside = true
-                        )
 
-                    ) {
-                        Card(
-                            elevation = CardDefaults.cardElevation(0.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier
-                                .width(160.dp)
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
-                                modifier = Modifier
-                                    .width(100.dp)
-                            ) {
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Box(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(text = "   All", Modifier.clickable {
-                                        viewModel.sortState = "default"
-                                        sortedState = "default"
-                                        FontWeight.SemiBold
-                                    })
-                                }
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Divider()
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Box(modifier = Modifier.fillMaxWidth()) {
-                                    Text(text = "   Unresolved", Modifier.clickable {
-                                        viewModel.sortState = "unresolved"
-                                        sortedState = "unresolved"
-                                        FontWeight.SemiBold
-                                    })
-                                }
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Divider()
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Box(modifier = Modifier.fillMaxWidth()) {
-                                    Text(text = "   Resolved", Modifier.clickable {
-                                        viewModel.sortState = "resolved"
-                                        sortedState = "resolved"
-                                        FontWeight.SemiBold
-                                    })
-                                }
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                )
-                                Divider()
-
-                            }
-                        }
-                    }
-                }
                 complaints?.let {
                     var compCopy = complaints
                     if (sortedState == "unresolved") {
